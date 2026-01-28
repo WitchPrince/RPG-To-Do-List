@@ -7,6 +7,11 @@ struct Market{
 	int count;
 };
 
+struct Tasks{
+	char taskName[80], taskDetails[300];
+	int hardness, reward, exp;
+};
+
 int main(){
 	int decision;
 	struct Market k1;
@@ -77,7 +82,7 @@ int main(){
 			else{
 				while(fscanf(fptr, "Product: %[^,], Price: %d\n", readedName, &readedPrice) != EOF){
 					if(strcmp(readedName, deleteName) != 0){
-						fprintf(temp, "Product: %s, Price %d\n", readedName, readedPrice);
+						fprintf(temp, "Product: %s, Price: %d\n", readedName, readedPrice);
 					}
 					else check = 1;
 				}
@@ -126,5 +131,58 @@ int main(){
 			else printf("%s urununun yeni degeri: %d", searchName, changePrice);
 		}
 
+	}
+
+	else if(decision == 2){
+		FILE *fptr = fopen("database/tasks.txt", "r");
+		struct Tasks k1;
+
+			if(fptr == NULL){
+				printf("Mevcut gorev yok!");
+			}
+			
+			else {
+				printf("\n-------------------------------------------------------\n");
+				char i;
+				while(1){
+					i = fgetc(fptr);
+					if(i == EOF) break;
+					else	printf("%c", i);
+				}
+				printf("\n-------------------------------------------------------\n");
+				fclose(fptr);
+			}
+
+				printf("\nHangi islemi yapmak istiyorsunuz?\n(1) Add quest\n(2) Complete quest\n(3) Change quest parameters\n(4) View Quest Details\n(5) Delete quest\nDecision: ");
+				scanf("%d", &decision);
+
+				if(decision == 1){
+					fptr = fopen("database/tasks.txt", "a");
+					int oto;
+					if(fptr == NULL){
+						printf("Hata! Dosya acilamadi! database klasorundeki tasks.txt dosyasını kontrol edin!");
+						return -1;
+					}
+					printf("Gorev adi (Maks 80 karakter!): ");
+					scanf("%s", k1.taskName);
+					printf("Gorev zorlugu (1-5): ");
+					scanf("%d", &k1.hardness);
+					printf("Odul ve exp otomatik hesaplansin mi? (1/0): ");
+					scanf("%d", &oto);
+
+					if(oto == 1){
+						k1.reward = k1.hardness * 50;
+						k1.exp = k1.hardness * 5;
+					}
+
+					else{
+						printf("Gorev odulu: ");
+						scanf("%d", &k1.reward);
+						printf("Gorev exp'si: ");
+						scanf("%d", &k1.exp);
+					}
+
+					fprintf(fptr, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\n", k1.taskName, k1.hardness, k1.reward, k1.exp);
+				}
 	}
 }
