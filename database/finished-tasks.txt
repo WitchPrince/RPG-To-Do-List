@@ -1,0 +1,2 @@
+Gorev: Deneme, Zorluk: 4, Odul: 100, Exp: 40
+Gorev: Merhabalar, Zorluk: 3, Odul: 150, Exp: 15

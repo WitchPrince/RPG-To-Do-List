@@ -1,1 +1,2 @@
-Gorev: Merhabalar, Zorluk: 3, Odul: 150, Exp: 15
+Gorev: Deneme2, Zorluk: 2, Odul: 100, Exp: 10
+Gorev: Merhaba, Zorluk: 2, Odul: 100, Exp: 10
