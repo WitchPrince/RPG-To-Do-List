@@ -6,3 +6,7 @@ Gorev: Deneme, Zorluk: 3, Odul: 150, Exp: 15
 Gorev Detaylari:
 Deneme-1
 
+Gorev: Deneme-6, Zorluk: 1, Odul: 50, Exp: 5
+Gorev Detaylari:
+Gorev detayi eklenmemis!
+

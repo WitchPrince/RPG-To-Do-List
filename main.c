@@ -24,7 +24,7 @@ int main(){
 		}
 
 		else if(decision == 3){
-			printf("Inventory is still on development...");
+			inventory();
 		}
 
 		else if(decision == 4) break;

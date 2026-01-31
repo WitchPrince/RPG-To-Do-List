@@ -1,21 +1,18 @@
 Gorev: Deneme-1, Zorluk: 1, Odul: 50, Exp: 5
 Gorev Detaylari:
- Gorev detayi eklenmemis!
+Gorev detayi eklenmemis!
 
 Gorev: Deneme 1, Zorluk: 1, Odul: 50, Exp: 5
 Gorev Detaylari:
 1
 
-
 Gorev: Deneme-1, Zorluk: 1, Odul: 50, Exp: 5
 Gorev Detaylari:
 1
 
-
 Gorev: Deneme-2, Zorluk: 1, Odul: 50, Exp: 5
 Gorev Detaylari:
 Merhaba
-
 
 Gorev: Deneme-3, Zorluk: 1, Odul: 50, Exp: 5
 Gorev Detaylari:

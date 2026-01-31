@@ -40,7 +40,7 @@ void taskMenu(){
 				printf("Gorev adi (Maks 80 karakter!): ");
 				scanf(" %[^\n]", k1.taskName);
 					
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", isim, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == 5){
+				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", isim, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == EOF){
 					while(strcmp(isim, k1.taskName) == 0){
 						printf("Bu isimde baska bir gorev mevcut. Lutfen baska bir isim giriniz!");
 						scanf(" %[^\n]", k1.taskName);
@@ -95,7 +95,7 @@ void taskMenu(){
 				printf("Tamamlamak istediginiz gorevin ismini yaziniz: ");
 				scanf("%s", searchTask);
 
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == 5){
+				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == EOF){
 					if(strcmp(searchTask, k1.taskName) != 0){
 						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails); 
 					}
@@ -129,7 +129,7 @@ void taskMenu(){
 				printf("Hangi görevin parametrelerini degistirmek istiyorsunuz?");
 				scanf("%s", searchName);
 
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == 5){
+				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == EOF){
 					if(strcmp(searchName, k1.taskName) != 0)
 						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 					else{
@@ -220,7 +220,7 @@ void taskMenu(){
 				printf("Silmek istediginiz gorevin adi: ");
 				scanf(" %[^\n]", deleteQuest);
 
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == 5){
+				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == EOF){
 					if(strcmp(deleteQuest, k1.taskName) != 0){
 						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 					}

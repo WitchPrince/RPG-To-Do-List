@@ -5,12 +5,15 @@
 #define MAX_NAME 50
 #define MAX_TASK_NAME 80
 #define MAX_TASK_DETAILS 300
+#define MAX_ITEM_NAME 25
+#define MAX_ITEM_DETAILS 200
 
 //Dizinler
 #define MARKET "database/market.txt"
 #define TEMP "database/temp.txt"
 #define TASKS "database/tasks.txt"
 #define FINISHED "database/finished-tasks.txt"
+#define INVENTORY "database/inventory.txt"
 
 //structlar
 struct Market {
@@ -23,8 +26,17 @@ struct Tasks{
 	char taskDetails[MAX_TASK_DETAILS];
 	int hardness, reward, exp;
 };
+
+struct Item{
+	char itemName[MAX_ITEM_NAME];
+	char itemDetails[MAX_ITEM_DETAILS];
+	char rarity;
+	int  itemCount;
+};
+
 //fonksiyonlar
 void marketMenu();
 void taskMenu();
+void inventory();
 
 #endif
