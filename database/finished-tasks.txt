@@ -1,2 +1,8 @@
-Gorev: Deneme, Zorluk: 4, Odul: 100, Exp: 40
-Gorev: Merhabalar, Zorluk: 3, Odul: 150, Exp: 15
+Gorev: Merhaba, Zorluk: 1, Odul: 50, Exp: 5
+Gorev Detaylari:
+Deneme name changew
+
+Gorev: Deneme, Zorluk: 3, Odul: 150, Exp: 15
+Gorev Detaylari:
+Deneme-1
+

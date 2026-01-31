@@ -1,1 +1,1 @@
-Product: Elma, Price: 15
+Product: Elma, Price: 45
