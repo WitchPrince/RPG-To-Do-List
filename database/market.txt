@@ -1,1 +1,3 @@
 Product: Elma, Price: 45
+Item Detaylari: Kirmizi
+

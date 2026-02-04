@@ -8,7 +8,6 @@ int main(){
 	struct Market m1;
 
 	printf("RPG To-Do List uygulamasina hosgeldiniz!");
-	
 	while(decision != 0){
 	
 		printf("\nYapmak istediğiniz islemi numara ile seciniz.\n\n(1) Marketplace\n(2) Tasks\n(3) Inventory\n(4) Exit\nDecision: ");

@@ -1,12 +1,19 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-//Metin uzunlukları etc
+//metin uzunluklari etc.
 #define MAX_NAME 50
+
+//Task Management
 #define MAX_TASK_NAME 80
 #define MAX_TASK_DETAILS 300
 #define MAX_ITEM_NAME 25
 #define MAX_ITEM_DETAILS 200
+
+/*User Management (still on development)
+#define MAX_USER_NAME 20
+#define MAX_PW 20*/
+
 
 //Dizinler
 #define MARKET "database/market.txt"
@@ -18,6 +25,7 @@
 //structlar
 struct Market {
 	char isim[MAX_NAME];
+	char detail[MAX_ITEM_DETAILS];
 	int price, count;
 };
 
