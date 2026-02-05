@@ -28,62 +28,59 @@ void marketMenu(){
 		scanf("%d", &decision);
 
 	if(decision == 1){
-			bool found = 0, check = 0;
+			bool foundInMarket = 0, foundInInventory = 0;
 	       		int balance, oldBalance;	
 			char wanted[MAX_ITEM_NAME];
 			fptr = fopen(MARKET, "r");
-			temp = fopen(TEMP, "w");
-			inventory = fopen(INVENTORY, "r");
 
-			fscanf(inventory, "%d\n\n", &oldBalance);
+			if((inventory = fopen(INVENTORY, "r")) == NULL){
+				inventory = fopen(INVENTORY, "w");
+				fprintf(inventory, "0\n\n");
+				fclose(inventory);
+			}
 
 			printf("Hangi urunu almak istiyorsunuz: ");
 			scanf("%s", wanted);
-
 			
-			while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details: %[^\n]\n\n", m1.isim, &m1.price, m1.detail) != EOF){
-				if(strcmp(wanted, m1.isim) == 0){
-					found = 1;
-					if(oldBalance >= m1.price){
-						balance = oldBalance - m1.price;
-						fprintf(temp, "%d\n\n", balance);
-					}
-					else
-						fprintf(temp, "%d\n\n", oldBalance);
-				}	
+			while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", m1.isim, &m1.price, m1.detail) != EOF){
+				if(strcmp(wanted, m1.isim) == 0) foundInMarket = 1;
 			}
-			
-			while(1){
-				if(fscanf(inventory, " %[^,], %d, Item Detaylari:\n %[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
-					check = 1;
 
-					if(strcmp(wanted, i1.itemName) == 0){
-						if(oldBalance >= m1.price){	
-							fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount + 1, i1.itemDetails);
-							printf("Urun alindi ve envanterinize eklendi! Kalan bakiyeniz: %d", balance);
-						}
+			if(foundInMarket == 0){
+				printf("Urun bulunamadi!");
+				return;
+			}
 
-						else{
-							printf("Bakiyeniz yetersiz!");
-						}
-					}	
-					else{
-						fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
-					}
+			//Bakiye okuma & yazdirma
+			else{
+				inventory = fopen(INVENTORY, "r");
+				temp = fopen(TEMP, "w");
+
+				fscanf(inventory, "%d\n\n", &oldBalance);
+				if(oldBalance >= m1.price){
+					balance = oldBalance - m1.price;
+					fprintf(temp, "%d\n\n", balance);
 				}
-
 				else{
-					if(check == 0){
-						fprintf(temp, "%s, 1, Item Detaylari:\n%s\n\n", m1.isim, m1.detail);
-						break;
-					}
+					printf("Bakiyeniz yetersiz!");
+					return;
+				}
+			}
+			
+			while(fscanf(inventory, " %[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 
-					else break;
+				if(strcmp(wanted, i1.itemName) == 0){
+					foundInInventory = 1;
+					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount + 1, i1.itemDetails);
+					printf("Urun alindi ve envanterinize eklendi! Kalan bakiyeniz: %d", balance);
+				}	
+				else{
+					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 				}
 			}
 
-			if(found == 0){
-				printf("Girdiginiz urun listede bulunmuyor!");
+			if(foundInInventory == 0){
+				fprintf(temp, "%s, 1, Item Detaylari:\n%s\n\n", m1.isim, m1.detail);
 			}
 
 			fclose(temp); fclose(fptr); fclose(inventory);

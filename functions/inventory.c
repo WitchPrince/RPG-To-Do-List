@@ -7,15 +7,23 @@ void inventory(){
 	FILE *fptr = fopen(INVENTORY, "r");
 	FILE *temp = fopen(TEMP, "w");
 	char itemSelect[MAX_ITEM_NAME];
-	int decision;
-	int balance;
+	int decision, balance;
 	bool check = 0, isExist = 0;
 	struct Item i1;
-	fscanf(fptr, "%d\n\n", &balance);
 
 	printf("\n======Inventory======\n");
 
-	while(fscanf(fptr, " %[^,], %d, Item Detaylari:\n %[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+	if(fptr == NULL){
+		fptr = fopen(INVENTORY, "w");
+		fprintf(fptr, "0\n\n");
+		fclose(fptr);
+		fptr = fopen(INVENTORY, "r");
+	}
+	
+	fscanf(fptr, "%d\n\n", &balance);
+
+	while(fscanf(fptr, " %[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+		isExist = 1;
 		printf("%s, %d\nDescription: %s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 	}
 
@@ -24,22 +32,20 @@ void inventory(){
 	printf("Hangi itemi kullanmak istiyorsunuz: ");
 	scanf(" %[^\n]", itemSelect);
 
-
-	while(fscanf(fptr, " %[^,], %d, Item Detaylari:\n %[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
-		isExist = 1;
-	}
-
 	fclose(fptr);
 	fptr = fopen(INVENTORY, "r");
 
 	if(isExist){
+		fscanf(fptr, "%d\n\n", &balance);
 		while(fscanf(fptr, " %[^,], %d, Item Detaylari:\n %[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 			if(strcmp(itemSelect, i1.itemName) != 0){
 				fprintf(temp, "%s, %d, %s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 			}
 			else{
-				fprintf(temp, "%s, %d, %s\n\n", i1.itemName, i1.itemCount - 1, i1.itemDetails);
-				check = 1;
+				if((i1.itemCount - 1) != 0){
+					fprintf(temp, "%s, %d, %s\n\n", i1.itemName, i1.itemCount - 1, i1.itemDetails);
+					check = 1;
+				}
 			}
 		}
 	}
