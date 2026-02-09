@@ -32,8 +32,9 @@ void marketMenu(){
 	       		int balance, oldBalance;	
 			char wanted[MAX_ITEM_NAME];
 			fptr = fopen(MARKET, "r");
+			inventory = fopen(INVENTORY, "r");
 
-			if((inventory = fopen(INVENTORY, "r")) == NULL){
+			if(inventory == NULL){
 				inventory = fopen(INVENTORY, "w");
 				fprintf(inventory, "0\n\n");
 				fclose(inventory);

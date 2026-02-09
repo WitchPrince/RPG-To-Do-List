@@ -93,7 +93,7 @@ void taskMenu(){
 
 				char searchTask[MAX_TASK_NAME];
 				printf("Tamamlamak istediginiz gorevin ismini yaziniz: ");
-				scanf("%s", searchTask);
+				scanf(" %[^\n]", searchTask);
 
 				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == EOF){
 					if(strcmp(searchTask, k1.taskName) != 0){
