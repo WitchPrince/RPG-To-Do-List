@@ -5,6 +5,9 @@
 
 void taskMenu(){
 		FILE *fptr = fopen(TASKS, "r");
+		FILE *temp;
+		FILE *inventory;
+
 		struct Tasks k1;
 		int decision;
 		bool check = 0;
@@ -29,25 +32,31 @@ void taskMenu(){
 			scanf("%d", &decision);
 
 			if(decision == 1){
-				fptr = fopen(TASKS, "r");
 				int oto, detay;
-				char isim[MAX_TASK_NAME];
+				bool isDuplicate;
+				char name[MAX_TASK_NAME];
 
-				if(fptr == NULL){
-					printf("Hata! Dosya acilamadi! database klasorundeki tasks.txt dosyasını kontrol edin!");
-					return;
-				}
 				printf("Gorev adi (Maks 80 karakter!): ");
 				scanf(" %[^\n]", k1.taskName);
 					
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", isim, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == EOF){
-					while(strcmp(isim, k1.taskName) == 0){
-						printf("Bu isimde baska bir gorev mevcut. Lutfen baska bir isim giriniz!");
-						scanf(" %[^\n]", k1.taskName);
+				do{
+					isDuplicate = 0;
+					fptr = fopen(TASKS, "r");
+
+					if(fptr != NULL){
+						while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", name, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+							if(strcmp(name, k1.taskName) == 0){
+								isDuplicate = 1;
+								printf("Bu isimde baska bir gorev mevcut. Lutfen baska bir isim giriniz!");
+								scanf(" %[^\n]", k1.taskName);
+								break;
+							}
+						}
+						fclose(fptr);
 					}
-				}
-				fclose(fptr);
-				fptr = fopen(TASKS, "a");
+				}while(isDuplicate);
+
+				fptr = fopen(TASKS, "a");	
 
 				printf("Gorev zorlugu (1-5): ");
 				scanf("%d", &k1.hardness);
@@ -88,35 +97,59 @@ void taskMenu(){
 
 			if(decision == 2){
 				FILE *finished = fopen(FINISHED, "a");
-				FILE *fptr = fopen(TASKS, "r");
-				FILE *temp = fopen(TEMP, "w");
+				fptr = fopen(TASKS, "r");
+				temp = fopen(TEMP, "w");
+				inventory = fopen(INVENTORY, "r");
+				int reward;
 
 				char searchTask[MAX_TASK_NAME];
 				printf("Tamamlamak istediginiz gorevin ismini yaziniz: ");
 				scanf(" %[^\n]", searchTask);
 
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == EOF){
+				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
 					if(strcmp(searchTask, k1.taskName) != 0){
 						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails); 
 					}
 					else{
 						fprintf(finished, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+						reward = k1.reward;
 						check = 1;
 					}
 				}
 
 				fclose(fptr); fclose(finished); fclose(temp);
+			
+				remove(TASKS);
+				rename(TEMP, TASKS);
+
+				//Reward gain system
 
 				if(check == 0){
 					printf("Gorev bulunamadi!");
 					return;
 				}
 				else{
+					struct Item i1;
+					fptr = fopen(TASKS, "r");
+					temp = fopen(TEMP, "w");
+					inventory = fopen(INVENTORY, "r");
+					int balance, oldBalance, check = 1;
+					
+					fscanf(inventory, "%d\n\n", &oldBalance);
+				
+					while(fscanf(inventory, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+						if(check == 1){
+							balance = oldBalance + reward;
+							fprintf(temp, "%d\n\n", balance);
+							check = 0;
+						}
+						fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
+					}
+					fclose(temp); fclose(fptr), fclose(inventory);
+					remove(INVENTORY);
+					rename(TEMP, INVENTORY);
 					printf("Gorev tamamlandı!");
 				}
-			
-				remove(TASKS);
-				rename(TEMP, TASKS);
 			}
 
 			if(decision == 3){
@@ -128,7 +161,7 @@ void taskMenu(){
 				printf("Hangi görevin parametrelerini degistirmek istiyorsunuz?");
 				scanf("%s", searchName);
 
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == EOF){
+				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
 					if(strcmp(searchName, k1.taskName) != 0)
 						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 					else{
@@ -219,7 +252,7 @@ void taskMenu(){
 				printf("Silmek istediginiz gorevin adi: ");
 				scanf(" %[^\n]", deleteQuest);
 
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) == EOF){
+				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
 					if(strcmp(deleteQuest, k1.taskName) != 0){
 						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 					}

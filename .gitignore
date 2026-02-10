@@ -8,4 +8,4 @@ rpg
 
 # Veritabanı (İsteğe bağlı - Eğer boş veritabanı şablonu kalsın istiyorsan bunları ekleme)
 database/users/*
-database/temp.txt
+*.txt

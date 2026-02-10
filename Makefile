@@ -8,7 +8,7 @@ CFLAGS = -std=c99 -Wall
 TARGET = rpg
 
 # Kaynak dosyalar
-SRCS = main.c functions/taskMenu.c functions/marketMenu.c functions/inventory.c
+SRCS = main.c functions/taskMenu.c functions/marketMenu.c functions/inventory.c functions/cheats.c
 
 all:
 	$(CC) $(CFLAGS) $(SRCS) -o $(TARGET)

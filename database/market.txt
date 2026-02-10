@@ -1,0 +1,3 @@
+Product: armut, Price: 13
+Item Details: Yesil
+

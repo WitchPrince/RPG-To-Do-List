@@ -48,5 +48,6 @@ struct Item{
 void marketMenu();
 void taskMenu();
 void inventory();
+void cheats();
 
 #endif

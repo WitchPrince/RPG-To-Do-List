@@ -21,19 +21,17 @@ void inventory(){
 	}
 	
 	fscanf(fptr, "%d\n\n", &balance);
+	printf("\n%d\n", balance);
 
 	while(fscanf(fptr, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 		isExist = 1;
 		printf("%s, %d\nDescription: %s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 	}
 
-	rewind(fptr);
-
 	printf("Hangi itemi kullanmak istiyorsunuz: ");
 	scanf(" %[^\n]", itemSelect);
 
-	fclose(fptr);
-	fptr = fopen(INVENTORY, "r");
+	rewind(fptr);
 
 	if(isExist){
 		fscanf(fptr, " %d\n\n", &balance);
@@ -60,6 +58,8 @@ void inventory(){
 		
 
 	fclose(fptr); fclose(temp);
-	remove(INVENTORY);
-	rename(TEMP, INVENTORY);
+	if(isExist == 1){
+			remove(INVENTORY);
+			rename(TEMP, INVENTORY);
+	}
 }
