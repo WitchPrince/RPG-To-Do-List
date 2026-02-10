@@ -124,7 +124,6 @@ void taskMenu(){
 			       	FILE *temp = fopen(TEMP, "w");
 				
 				char searchName[MAX_TASK_NAME];
-				int foundHardness, foundReward, foundExp;
 				
 				printf("Hangi görevin parametrelerini degistirmek istiyorsunuz?");
 				scanf("%s", searchName);

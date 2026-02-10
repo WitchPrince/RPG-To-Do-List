@@ -5,7 +5,6 @@
 
 int main(){
 	int decision = 1;
-	struct Market m1;
 
 	printf("RPG To-Do List uygulamasina hosgeldiniz!");
 	while(decision != 0){

@@ -7,7 +7,7 @@ void inventory(){
 	FILE *fptr = fopen(INVENTORY, "r");
 	FILE *temp = fopen(TEMP, "w");
 	char itemSelect[MAX_ITEM_NAME];
-	int decision, balance = 0;
+	int balance = 0;
 	bool check = 0, isExist = 0;
 	struct Item i1;
 

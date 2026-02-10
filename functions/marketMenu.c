@@ -9,7 +9,7 @@ void marketMenu(){
 		FILE *inventory;
 		struct Market m1;
 		struct Item i1;
-		int decision, count = 0;
+		int decision;
 
 		if((fptr = fopen(MARKET, "r")) == NULL){
 			printf("Dosya mevcut degil! Lutfen urun ekleyerek dosyayı olusturunuz.\n");
@@ -34,6 +34,11 @@ void marketMenu(){
 			fptr = fopen(MARKET, "r");
 			inventory = fopen(INVENTORY, "r");
 
+			if(fptr == NULL){
+				printf("Market dosyasi bos! Lutfen urun ekleyin!");
+				return;
+			}
+
 			if(inventory == NULL){
 				inventory = fopen(INVENTORY, "w");
 				fprintf(inventory, "0\n\n");
@@ -43,8 +48,8 @@ void marketMenu(){
 			printf("Hangi urunu almak istiyorsunuz: ");
 			scanf("%s", wanted);
 			
-			while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", m1.isim, &m1.price, m1.detail) != EOF){
-				if(strcmp(wanted, m1.isim) == 0) foundInMarket = 1;
+			while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", m1.name, &m1.price, m1.detail) != EOF){
+				if(strcmp(wanted, m1.name) == 0) foundInMarket = 1;
 			}
 
 			if(foundInMarket == 0){
@@ -81,7 +86,7 @@ void marketMenu(){
 			}
 
 			if(foundInInventory == 0){
-				fprintf(temp, "%s, 1, Item Detaylari:\n%s\n\n", m1.isim, m1.detail);
+				fprintf(temp, "%s, 1, Item Detaylari:\n%s\n\n", m1.name, m1.detail);
 			}
 
 			fclose(temp); fclose(fptr); fclose(inventory);
@@ -95,13 +100,13 @@ void marketMenu(){
 			
 		while(decision != 0){
 			printf("\nEklenecek urunun ismi: ");
-			scanf(" %[^\n]", m1.isim);
+			scanf(" %[^\n]", m1.name);
 			printf("Urunun fiyati: ");
 			scanf("%d", &m1.price);
 			printf("Urun detayi: ");
 			scanf(" %[^\n]", m1.detail);
 
-			fprintf(fptr, "Product: %s, Price: %d\nItem Details: %s\n\n", m1.isim, m1.price, m1.detail);
+			fprintf(fptr, "Product: %s, Price: %d\nItem Details: %s\n\n", m1.name, m1.price, m1.detail);
 
 			printf("\nBaska urun eklemek ister misiniz? (1/0): ");
 			scanf("%d", &decision);
@@ -111,22 +116,23 @@ void marketMenu(){
 
 	if(decision == 3){
 		fptr = fopen(MARKET, "r");
-
+		temp = fopen(TEMP, "w");
+		
+		if(fptr == NULL || temp == NULL){
+			printf("Market dosyasi bos! Urun ekleyin.");
+			return;
+		}
+		
 		char deleteName[50];
 		bool check;
 
 		printf("Silmek istediginiz urunun ismini giriniz: ");
 		scanf("%s", deleteName);
 
-		if(fptr == NULL || temp == NULL){
-			printf("Dosya acilamadi!");
-			return;
-		}
-
-		else{
-			while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details: %[^\n]\n\n", m1.isim, &m1.price, m1.detail) != EOF){
-				if(strcmp(m1.isim, deleteName) != 0){
-					fprintf(temp, "Product: %s, Price: %d\n", m1.isim, m1.price);
+		if(fptr != NULL || temp != NULL){
+			while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details: %[^\n]\n\n", m1.name, &m1.price, m1.detail) != EOF){
+				if(strcmp(m1.name, deleteName) != 0){
+					fprintf(temp, "Product: %s, Price: %d\n", m1.name, m1.price);
 				}
 				else check = 1;
 				}
@@ -145,20 +151,20 @@ void marketMenu(){
 		fptr = fopen(MARKET, "r");
 		FILE *temp = fopen(TEMP, "w");
 
-		char searchName[50], foundName[50];
-		int changePrice, foundPrice, check = 0;
+		char searchName[50];
+		int changePrice, check = 0;
 
 		printf("Hangi urunun fiyatini degistirmek istiyorsunuz: ");
 		scanf("%s", searchName);
 		printf("Yeni fiyat: ");
 		scanf("%d", &changePrice);
 
-		while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details: %[^\n]\n\n", m1.isim, &m1.price, m1.detail) != EOF){
-			if(strcmp(searchName, m1.isim) != 0){
-				fprintf(temp, "Product: %s, Price: %d\nItem Details: %s\n\n", m1.isim, m1.price, m1.detail);
+		while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details: %[^\n]\n\n", m1.name, &m1.price, m1.detail) != EOF){
+			if(strcmp(searchName, m1.name) != 0){
+				fprintf(temp, "Product: %s, Price: %d\nItem Details: %s\n\n", m1.name, m1.price, m1.detail);
 			}
 			else{
-				fprintf(temp, "Product: %s, Price: %d\nItem Details: %s\n\n", m1.isim, changePrice, m1.detail);
+				fprintf(temp, "Product: %s, Price: %d\nItem Details: %s\n\n", m1.name, changePrice, m1.detail);
 				check = 1;
 			}
 		}
@@ -172,6 +178,6 @@ void marketMenu(){
 			printf("Aranan urun markette bulunamadi!");
 			return;
 		}
-		else printf("%s urununun yeni degeri: %d", m1.isim, changePrice);
+		else printf("%s urununun yeni degeri: %d", m1.name, changePrice);
 	}
 }

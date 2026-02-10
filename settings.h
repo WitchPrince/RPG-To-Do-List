@@ -1,6 +1,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <stdbool.h>
+
 //metin uzunluklari etc.
 #define MAX_NAME 50
 
@@ -24,7 +26,7 @@
 
 //structlar
 struct Market {
-	char isim[MAX_NAME];
+	char name[MAX_NAME];
 	char detail[MAX_ITEM_DETAILS];
 	int price, count;
 };

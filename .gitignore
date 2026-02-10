@@ -1,2 +1,11 @@
-*.txt
+# Derlenmiş dosyalar
+rpg
+*.o
+*.exe
+
+# Sistem dosyaları
+.DS_Store
+
+# Veritabanı (İsteğe bağlı - Eğer boş veritabanı şablonu kalsın istiyorsan bunları ekleme)
+database/users/*
 database/temp.txt
