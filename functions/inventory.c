@@ -15,13 +15,13 @@ void inventory(){
 
 	if(fptr == NULL){
 		fptr = fopen(INVENTORY, "w");
-		fprintf(fptr, "%d\n\n", balance);
+		fprintf(fptr, "Currency: %d\n\n", balance);
 		fclose(fptr);
 		fptr = fopen(INVENTORY, "r");
 	}
 	
-	fscanf(fptr, "%d\n\n", &balance);
-	printf("\n%d\n", balance);
+	fscanf(fptr, "Currency: %d\n\n", &balance);
+	printf("\nCurrency: %d\n", balance);
 
 	while(fscanf(fptr, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 		isExist = 1;
@@ -34,8 +34,8 @@ void inventory(){
 	rewind(fptr);
 
 	if(isExist){
-		fscanf(fptr, " %d\n\n", &balance);
-		fprintf(temp, "%d\n\n", balance);
+		fscanf(fptr, "Currency: %d\n\n", &balance);
+		fprintf(temp, "Currency: %d\n\n", balance);
 
 		while(fscanf(fptr, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 			if(strcmp(itemSelect, i1.itemName) != 0){

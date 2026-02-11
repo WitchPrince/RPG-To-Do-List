@@ -20,19 +20,19 @@ void cheats(){
 		
 		if(inventory == NULL){
 			inventory = fopen(INVENTORY, "w");
-			fprintf(inventory, "0\n\n");
+			fprintf(inventory, "Currency: 0\n\n");
 			fclose(inventory);
 			inventory = fopen(INVENTORY, "r");
 		}
 
 		temp = fopen(TEMP, "w");
-		fscanf(inventory, "%d\n\n", &oldBalance);
+		fscanf(inventory, "Currency: %d\n\n", &oldBalance);
 
 		printf("How much do you want to add: ");
 		scanf("%d", &currency);
 		balance = oldBalance + currency;
 
-		fprintf(temp, "%d\n\n", balance);
+		fprintf(temp, "Currency: %d\n\n", balance);
 		while(fscanf(inventory, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 			fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 		}

@@ -7,9 +7,13 @@ void marketMenu(){
 		FILE *fptr;
 		FILE *temp;
 		FILE *inventory;
+		FILE *profile;
+
 		struct Market m1;
 		struct Item i1;
-		int decision;
+		struct Profile p1;
+
+		int decision, check = 1;
 
 		if((fptr = fopen(MARKET, "r")) == NULL){
 			printf("Dosya mevcut degil! Lutfen urun ekleyerek dosyayı olusturunuz.\n");
@@ -28,7 +32,7 @@ void marketMenu(){
 		scanf("%d", &decision);
 
 	if(decision == 1){
-			bool foundInMarket = 0, foundInInventory = 0;
+			bool foundInMarket = 0;
 	       		int balance, oldBalance;	
 			char wanted[MAX_ITEM_NAME];
 			fptr = fopen(MARKET, "r");
@@ -51,6 +55,7 @@ void marketMenu(){
 			while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", m1.name, &m1.price, m1.detail) != EOF){
 				if(strcmp(wanted, m1.name) == 0) foundInMarket = 1;
 			}
+			fclose(fptr);
 
 			if(foundInMarket == 0){
 				printf("Urun bulunamadi!");
@@ -59,40 +64,57 @@ void marketMenu(){
 
 			//Bakiye okuma & yazdirma
 			else{
-				inventory = fopen(INVENTORY, "r");
 				temp = fopen(TEMP, "w");
 
-				fscanf(inventory, "%d\n\n", &oldBalance);
+				fscanf(inventory, "Currency: %d\n\n", &oldBalance);
 				if(oldBalance >= m1.price){
 					balance = oldBalance - m1.price;
-					fprintf(temp, "%d\n\n", balance);
+					fprintf(temp, "Currency: %d\n\n", balance);
 				}
 				else{
 					printf("Bakiyeniz yetersiz!");
 					return;
 				}
 			}
-			
+		
+			//Envanterde bu itemden hiç yoksa ekleme yapılmıyor. Bu sorunu çöz.	
 			while(fscanf(inventory, " %[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
-
+				check = 0;
 				if(strcmp(wanted, i1.itemName) == 0){
-					foundInInventory = 1;
 					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount + 1, i1.itemDetails);
 					printf("Urun alindi ve envanterinize eklendi! Kalan bakiyeniz: %d", balance);
 				}	
-				else{
-					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
-				}
-			}
+			}	
 
-			if(foundInInventory == 0){
+			if(check){
 				fprintf(temp, "%s, 1, Item Detaylari:\n%s\n\n", m1.name, m1.detail);
 			}
 
-			fclose(temp); fclose(fptr); fclose(inventory);
-			
+
+			fclose(temp); fclose(inventory);
 			remove(INVENTORY);
 			rename(TEMP, INVENTORY);
+
+			if(foundInMarket == 1){
+				temp = fopen(TEMP, "w");
+				profile = fopen(PROFILE, "r");
+
+				if(profile == NULL){
+					profile = fopen(PROFILE, "w");
+					printf("Profile dosyasi bulunamadi. Yenisi olusturuluyor...\nKullanici adi: ");
+					scanf("%s", p1.user);
+					fprintf(profile, "User: %s, Currency: 0, Exp: 0", p1.user);
+					fclose(profile);
+					profile = fopen(PROFILE, "r");
+				}
+
+				fscanf(profile, "User: %[^,], Currency: %d, Exp: %d", p1.user, &p1.currency, &p1.exp);
+				fprintf(temp, "User: %s, Currency: %d, Exp: %d", p1.user, balance, p1.exp);
+				
+				fclose(profile); fclose(temp);
+				remove(PROFILE);
+				rename(TEMP, PROFILE);	
+			}
 	}
 
 	if(decision == 2){

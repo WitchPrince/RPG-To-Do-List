@@ -11,6 +11,7 @@
 #define MAX_TASK_DETAILS 300
 #define MAX_ITEM_NAME 25
 #define MAX_ITEM_DETAILS 200
+#define MAX_USER_NAME 30
 
 /*User Management (still on development)
 #define MAX_USER_NAME 20
@@ -23,6 +24,7 @@
 #define TASKS "database/tasks.txt"
 #define FINISHED "database/finished-tasks.txt"
 #define INVENTORY "database/inventory.txt"
+#define PROFILE "database/profile.txt"
 
 //structlar
 struct Market {
@@ -44,10 +46,16 @@ struct Item{
 	int  itemCount;
 };
 
+struct Profile{
+	char user[MAX_USER_NAME];
+	int currency, exp;
+};
+
 //fonksiyonlar
 void marketMenu();
 void taskMenu();
 void inventory();
+void profileMenu();
 void cheats();
 
 #endif

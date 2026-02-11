@@ -9,7 +9,7 @@ int main(){
 	printf("RPG To-Do List uygulamasina hosgeldiniz!");
 	while(decision != 0){
 	
-		printf("\nYapmak istediğiniz islemi numara ile seciniz.\n\n(1) Marketplace\n(2) Tasks\n(3) Inventory\n(4) Cheat Menu\n(5) Exit\nDecision: ");
+		printf("\nYapmak istediğiniz islemi numara ile seciniz.\n\n(1) Marketplace\n(2) Tasks\n(3) Inventory\n(4) Cheat Menu\n(5) Profile\n(6) Exit\nDecision: ");
 		scanf("%d", &decision);
 		printf("\n-------------------------------------------------------\n\n");
 
@@ -21,7 +21,9 @@ int main(){
 
 		else if(decision == 4) cheats();
 
-		else if(decision == 5) break;
+		else if(decision == 5) profileMenu();
+
+		else break;
 	}
 
 	return 0;

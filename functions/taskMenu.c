@@ -7,6 +7,7 @@ void taskMenu(){
 		FILE *fptr = fopen(TASKS, "r");
 		FILE *temp;
 		FILE *inventory;
+		FILE *profile;
 
 		struct Tasks k1;
 		int decision;
@@ -100,7 +101,7 @@ void taskMenu(){
 				fptr = fopen(TASKS, "r");
 				temp = fopen(TEMP, "w");
 				inventory = fopen(INVENTORY, "r");
-				int reward;
+				int reward, expGain;
 
 				char searchTask[MAX_TASK_NAME];
 				printf("Tamamlamak istediginiz gorevin ismini yaziniz: ");
@@ -113,6 +114,7 @@ void taskMenu(){
 					else{
 						fprintf(finished, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 						reward = k1.reward;
+						expGain = k1.exp;
 						check = 1;
 					}
 				}
@@ -129,13 +131,18 @@ void taskMenu(){
 					return;
 				}
 				else{
-					struct Item i1;
 					fptr = fopen(TASKS, "r");
 					temp = fopen(TEMP, "w");
 					inventory = fopen(INVENTORY, "r");
-					int balance, oldBalance, check = 1;
+
+					struct Profile p1;
+					struct Item i1;
+					int balance, oldBalance, exp, check = 1;
 					
-					fscanf(inventory, "%d\n\n", &oldBalance);
+					fscanf(inventory, "Currency: %d\n\n", &oldBalance);
+					if(inventory == NULL || oldBalance == 0){
+						fclose(inventory);
+					}
 				
 					while(fscanf(inventory, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 						if(check == 1){
@@ -148,6 +155,31 @@ void taskMenu(){
 					fclose(temp); fclose(fptr), fclose(inventory);
 					remove(INVENTORY);
 					rename(TEMP, INVENTORY);
+
+					temp = fopen(TEMP, "w");
+					profile = fopen(PROFILE, "r");
+
+					if(profile == NULL){
+						profile = fopen(PROFILE, "w");
+						printf("Profil bulunamadi! Yeni profil olusturuluyor...\nKullanici adiniz (Max 30 harf): ");
+						char userName[MAX_USER_NAME];
+						scanf("%s", userName);
+						fprintf(profile, "User: %s, Currency: %d, Exp: 0", userName, balance);
+						fclose(profile);
+						profile = fopen(PROFILE, "r");
+
+						return;
+					}
+					
+					fscanf(profile, "User: %[^,], Currency: %d, Exp: %d", p1.user, &p1.currency, &p1.exp);
+					exp = p1.exp + expGain; 
+					
+					fprintf(temp, "User: %s, Currency: %d, Exp: %d", p1.user, balance, exp);
+
+					fclose(temp); fclose(profile);
+					remove(PROFILE);
+					rename(TEMP, PROFILE);
+
 					printf("Gorev tamamlandı!");
 				}
 			}
