@@ -12,11 +12,10 @@
 #define MAX_ITEM_NAME 25
 #define MAX_ITEM_DETAILS 200
 #define MAX_USER_NAME 30
+#define MAX_PASSWD 20
 
-/*User Management (still on development)
-#define MAX_USER_NAME 20
-#define MAX_PW 20*/
-
+//Macrolar
+#define USER_DIR "database/users/%s.txt"
 
 //Dizinler
 #define MARKET "database/market.txt"
@@ -25,6 +24,7 @@
 #define FINISHED "database/finished-tasks.txt"
 #define INVENTORY "database/inventory.txt"
 #define PROFILE "database/profile.txt"
+#define USERLIST "database/users/userList.txt"
 
 //structlar
 struct Market {
@@ -47,7 +47,7 @@ struct Item{
 };
 
 struct Profile{
-	char user[MAX_USER_NAME];
+	char user[MAX_USER_NAME], passwd[MAX_PASSWD], expBar[12];
 	int currency, exp;
 };
 
@@ -56,6 +56,8 @@ void marketMenu();
 void taskMenu();
 void inventory();
 void profileMenu();
+void userMenu();
 void cheats();
+unsigned long hashPassword(char *str);
 
 #endif

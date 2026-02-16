@@ -3,34 +3,28 @@
 #include <string.h>
 #include "../settings.h"
 
-void profileMenu(){
-
-	FILE *profile = fopen(PROFILE, "r");
-	FILE *inventory = fopen(PROFILE, "r");
-	char userName[MAX_USER_NAME];
-	int balance;
-
-	if(profile == NULL){
-		printf("Profil bulunamadi! Yeni profil olusturuluyor...\nKullanici adiniz (Max 30 harf): ");
-		scanf("%s", userName);
-		profile = fopen(PROFILE, "w");
-
-		fscanf(inventory, "Currency: %d", &balance);
-		fprintf(profile, "User: %s, Currency: %d, Exp: 0", userName, balance);
-		fclose(profile);
-		profile = fopen(PROFILE, "r");
+void profileMenu(int userNumber){
+	FILE *nameList = fopen(USERLIST, "r");
+	FILE *profile;
+	struct Profile p1;
+	int userNo;
+	char filePath[100];
+	
+	while(fscanf(nameList, "(%d) User: %s", &userNo, p1.user) != EOF){
+		if(userNo == userNumber) break;
 	}
+	fclose(nameList);
+	sprintf(filePath, USER_DIR, p1.user);
+	profile = fopen(filePath, "r");
 
 	char i;
-
 	while(1){
 				i = fgetc(profile);
 				if(i == EOF) break;
 				else printf("%c", i);
 			}
+	fclose(profile);	
 	printf("\n\nMenuye donmek icin Enter tusuna basın.");	
 	getchar();
 	getchar();
-
-	fclose(profile);	
 }
