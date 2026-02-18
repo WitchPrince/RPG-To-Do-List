@@ -3,7 +3,7 @@
 #include <string.h>
 #include "../settings.h"
 
-void taskMenu(){
+void taskMenu(char filePath[100]){
 		FILE *fptr = fopen(TASKS, "r");
 		FILE *temp;
 		FILE *inventory;
@@ -157,16 +157,16 @@ void taskMenu(){
 					rename(TEMP, INVENTORY);
 
 					temp = fopen(TEMP, "w");
-					profile = fopen(PROFILE, "r");
+					profile = fopen(filePath, "r");
 
 					if(profile == NULL){
-						profile = fopen(PROFILE, "w");
+						profile = fopen(filePath, "w");
 						printf("Profil bulunamadi! Yeni profil olusturuluyor...\nKullanici adiniz (Max 30 harf): ");
 						char userName[MAX_USER_NAME];
 						scanf("%s", userName);
 						fprintf(profile, "User: %s, Currency: %d, Exp: 0", userName, balance);
 						fclose(profile);
-						profile = fopen(PROFILE, "r");
+						profile = fopen(filePath, "r");
 
 						return;
 					}
@@ -177,8 +177,8 @@ void taskMenu(){
 					fprintf(temp, "User: %s, Currency: %d, Exp: %d", p1.user, balance, exp);
 
 					fclose(temp); fclose(profile);
-					remove(PROFILE);
-					rename(TEMP, PROFILE);
+					remove(filePath);
+					rename(TEMP, filePath);
 
 					printf("Gorev tamamlandı!");
 				}

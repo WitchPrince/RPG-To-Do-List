@@ -3,7 +3,7 @@
 #include <string.h>
 #include "../settings.h"
 
-void marketMenu(){
+void marketMenu(char filePath[100]){
 		FILE *fptr;
 		FILE *temp;
 		FILE *inventory;
@@ -14,6 +14,7 @@ void marketMenu(){
 		struct Profile p1;
 
 		int decision, check = 1;
+		//char filePath[100];
 
 		if((fptr = fopen(MARKET, "r")) == NULL){
 			printf("Dosya mevcut degil! Lutfen urun ekleyerek dosyayı olusturunuz.\n");
@@ -97,23 +98,23 @@ void marketMenu(){
 
 			if(foundInMarket == 1){
 				temp = fopen(TEMP, "w");
-				profile = fopen(PROFILE, "r");
+				profile = fopen(filePath, "r");
 
 				if(profile == NULL){
-					profile = fopen(PROFILE, "w");
+					profile = fopen(filePath, "w");
 					printf("Profile dosyasi bulunamadi. Yenisi olusturuluyor...\nKullanici adi: ");
 					scanf("%s", p1.user);
 					fprintf(profile, "User: %s, Currency: 0, Exp: 0", p1.user);
 					fclose(profile);
-					profile = fopen(PROFILE, "r");
+					profile = fopen(filePath, "r");
 				}
 
 				fscanf(profile, "User: %[^,], Currency: %d, Exp: %d", p1.user, &p1.currency, &p1.exp);
 				fprintf(temp, "User: %s, Currency: %d, Exp: %d", p1.user, balance, p1.exp);
 				
 				fclose(profile); fclose(temp);
-				remove(PROFILE);
-				rename(TEMP, PROFILE);	
+				remove(filePath);
+				rename(TEMP, filePath);	
 			}
 	}
 

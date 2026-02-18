@@ -18,20 +18,20 @@ int userMenu(){
 	struct Profile p1;
 	strcpy(p1.expBar, "__________");
 	unsigned long hash, hashInFile;
-	char userName[MAX_USER_NAME], passwd[MAX_USER_NAME], filePath[100];
-	int userNumber, balance, exp, level;
+	char userName[MAX_USER_NAME], passwd[MAX_PASSWD], filePath[100];
+	int userNumber, balance, exp, level, decision, check = 1;
 
 	printf("(1) Login\n(2) Sign Up\nEnter any key to exit!\nDecision: ");
 	scanf("%d", &decision);
 
 	if(decision == 1){
-		nameList = fopen(USERLIST, "r")
+		nameList = fopen(USERLIST, "r");
 		
 		if(nameList != NULL){
 			printf("Please enter your user name: ");
 			scanf("%s", p1.user);
-			while(fscanf(nameList, "(%d) User: %[^,]", &userNumber, userName) != EOF){
-				while(strcmp(userName, p1.user) == 0){
+			while(fscanf(nameList, "(%d) User: %[^,]\n", &userNumber, userName) != EOF){
+				if(strcmp(userName, p1.user) == 0){
 					check = 0;
 					printf("Please enter your password: ");
 					scanf("%s", p1.passwd);
@@ -42,7 +42,7 @@ int userMenu(){
 					profile = fopen(filePath, "r");
 					fscanf(profile, "User: %[^,], Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d\n [%[^\n]\n", userName, &hashInFile, &balance, &exp, &level, p1.expBar);
 
-					if(strcmp(hash, hashInFile) == 0){
+					if(hash == hashInFile){
 						printf("\nGiris basarili! Hosgeldiniz %s", userName);
 						fclose(nameList); fclose(profile);
 						return userNumber;
@@ -66,43 +66,54 @@ int userMenu(){
 			scanf("%s", userName);
 			printf("New Password: ");
 			scanf("%s", p1.passwd);
-			hash = hashPassword("p1.passwd"); 
+			hash = hashPassword(p1.passwd); 
 			
 			//nameList'e ekleme
 			nameList = fopen(USERLIST, "w");
-			fprintf(nameList, "(1) User: %s", userName);
+			fprintf(nameList, "(1) User: %s\n", userName);
 			
 			//Profil dosyası oluşturma	
 
 			sprintf(filePath, USER_DIR, userName);
 			profile = fopen(filePath, "w");
-			fprintf(profile, "User: %s, Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: 0\n[%s]\n", userName, hash, balance, exp, level, p1.expBar);
+			fprintf(profile, "User: %s, Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: 0\n[%s]\n", userName, hash, balance, exp, p1.expBar);
 			
 			fclose(nameList); fclose(profile);
 			return 1;
 		}
 	}
 
-	else if(decision == 2){
+	if(decision == 2){
 		nameList = fopen(USERLIST, "a+");
 
-		printf("RPG To-Do uygulamasına hoşgeldiniz!\nKayıt olmak istediğiniz,\nKullanici adi: ");
+		printf("\nRPG To-Do uygulamasına hoşgeldiniz!\nKayıt olmak istediğiniz,\nKullanici adi: ");
 		scanf("%s", userName);
 		printf("Sifre: ");
 		scanf("%s", passwd);
 		hash = hashPassword(p1.passwd);
 
 		if(nameList != NULL){
-			while(fscanf(nameList, "(%d) User: %s", &userNumber, userName) != EOF);
+			while(fscanf(nameList, "(%d) User: %s\n", &userNumber, userName) != EOF){
+				userNumber += userNumber;
+			}
 			rewind(nameList);
-			fprintf(nameList, "(%d) User: %s", userNumber + 1, userName);
+			fprintf(nameList, "(%d) User: %s\n", userNumber + 1, userName);
+		
+			sprintf(filePath, USER_DIR, userName);
+			profile = fopen(filePath, "w");
+			fprintf(profile, "User: %s, Password: %lu\n\nCurrency: 0\nExp: 0\nLevel: 0\n[%s]\n", userName, hash, p1.expBar);
+		
+			return userNumber + 1; 
 		}
-		else fprintf(nameList, "(1) User: %s", userName);
-	
-		sprintf(filePath, USER_DIR, userName);
-		profile = fopen(filePath, "w");
-
-		fprintf(profile, "User: %s, Password: %lu\n\nCurrency: 0\nExp: 0\nLevel: 0\n[%s]\n", userName, hash, p1.expBar);
+		else{
+			fprintf(nameList, "(1) User: %s\n", userName);
+			
+			sprintf(filePath, USER_DIR, userName);
+			profile = fopen(filePath, "w");
+			fprintf(profile, "User: %s, Password: %lu\n\nCurrency: 0\nExp: 0\nLevel: 0\n[%s]\n", userName, hash, p1.expBar);
+			fclose(nameList); fclose(profile);
+			return 1;
+		}
 	}
 
 	else{

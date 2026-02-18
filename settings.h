@@ -23,7 +23,6 @@
 #define TASKS "database/tasks.txt"
 #define FINISHED "database/finished-tasks.txt"
 #define INVENTORY "database/inventory.txt"
-#define PROFILE "database/profile.txt"
 #define USERLIST "database/users/userList.txt"
 
 //structlar
@@ -48,15 +47,15 @@ struct Item{
 
 struct Profile{
 	char user[MAX_USER_NAME], passwd[MAX_PASSWD], expBar[12];
-	int currency, exp;
+	int currency, exp, number;
 };
 
 //fonksiyonlar
-void marketMenu();
-void taskMenu();
+void marketMenu(char filePath[100]);
+void taskMenu(char filePath[100]);
 void inventory();
-void profileMenu();
-void userMenu();
+void profileMenu(int userNumber);
+int userMenu();
 void cheats();
 unsigned long hashPassword(char *str);
 

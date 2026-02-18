@@ -1,14 +1,9 @@
-# Derleyici ve Bayraklar (Flags)
 CC = gcc
-# -std=c99: Standart C99 kullan (bool desteği ve uyumluluk için)
-# -Wall: Tüm uyarıları göster (Hata ayıklamak için)
 CFLAGS = -std=c99 -Wall
 
-# Hedef dosya ismi
 TARGET = rpg
 
-# Kaynak dosyalar
-SRCS = main.c functions/taskMenu.c functions/marketMenu.c functions/inventory.c functions/cheats.c functions/profile.c
+SRCS = main.c functions/taskMenu.c functions/marketMenu.c functions/inventory.c functions/cheats.c functions/profile.c functions/userMenu.c
 
 all:
 	$(CC) $(CFLAGS) $(SRCS) -o $(TARGET)
