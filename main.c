@@ -4,16 +4,24 @@
 #include "settings.h"
 
 int main(){
-	FILE *nameList = fopen(USERLIST, "r");
 	struct Profile p1;
 	int decision = 1, number = userMenu();
-	char filePath[100];
+	if(number == 0){
+		printf("Sifre yanlis!");
+		return 0;
+	}
+
+	char filePathP[100], filePathI[100];
+	
+	FILE *nameList = fopen(USERLIST, "r");
 
 	while(fscanf(nameList, "(%d) User: %s", &p1.number, p1.user) != EOF){
 		if(number == p1.number) break;
 	}
-	sprintf(filePath, USER_DIR, p1.user);
+	fclose(nameList);
 
+	sprintf(filePathP, USER_DIR, p1.user);
+	sprintf(filePathI, INVENTORY, p1.user);
 	printf("\nRPG To-Do List uygulamasina hosgeldiniz!");
 	while(decision != 0){
 	
@@ -21,13 +29,13 @@ int main(){
 		scanf("%d", &decision);
 		printf("\n-------------------------------------------------------\n\n");
 
-		if(decision == 1) marketMenu(filePath);
+		if(decision == 1) marketMenu(filePathP, filePathI);
 
-		else if(decision == 2) taskMenu(filePath);
+		else if(decision == 2) taskMenu(filePathP, filePathI);
 
-		else if(decision == 3) inventory();
+		else if(decision == 3) inventory(filePathI);
 
-		else if(decision == 4) cheats();
+		else if(decision == 4) cheats(p1.user);
 
 		else if(decision == 5) profileMenu(number);
 

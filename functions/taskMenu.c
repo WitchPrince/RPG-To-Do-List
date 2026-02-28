@@ -3,15 +3,18 @@
 #include <string.h>
 #include "../settings.h"
 
-void taskMenu(char filePath[100]){
+void taskMenu(char filePathP[100], char filePathI[100]){
 		FILE *fptr = fopen(TASKS, "r");
 		FILE *temp;
 		FILE *inventory;
 		FILE *profile;
 
 		struct Tasks k1;
+		struct Profile p1;
 		int decision;
 		bool check = 0;
+	 	unsigned long hash;
+		strcpy(p1.expBar, "[__________]"); 
 
 			if(fptr == NULL){
 				printf("Mevcut gorev yok!");
@@ -80,9 +83,7 @@ void taskMenu(char filePath[100]){
 
 				if(detay == 1){
 					printf("Gorev detayi (Max 300 harf!):\n");
-					while(getchar() != '\n');
-
-					fgets(k1.taskDetails, sizeof(k1.taskDetails), stdin);
+					scanf(" %[^\n]", k1.taskDetails);
 
 					fprintf(fptr, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 				}
@@ -96,14 +97,18 @@ void taskMenu(char filePath[100]){
 				fclose(fptr);
 			}
 
-			if(decision == 2){
+			else if(decision == 2){
 				FILE *finished = fopen(FINISHED, "a");
 				fptr = fopen(TASKS, "r");
 				temp = fopen(TEMP, "w");
-				inventory = fopen(INVENTORY, "r");
 				int reward, expGain;
 
 				char searchTask[MAX_TASK_NAME];
+
+				if(fptr == NULL){
+					printf("Gorev listesi bos! Gorev ekleyiniz!");
+					return;
+				}
 				printf("Tamamlamak istediginiz gorevin ismini yaziniz: ");
 				scanf(" %[^\n]", searchTask);
 
@@ -119,7 +124,7 @@ void taskMenu(char filePath[100]){
 					}
 				}
 
-				fclose(fptr); fclose(finished); fclose(temp);
+				fclose(finished); fclose(temp); fclose(fptr);
 			
 				remove(TASKS);
 				rename(TEMP, TASKS);
@@ -131,67 +136,72 @@ void taskMenu(char filePath[100]){
 					return;
 				}
 				else{
-					fptr = fopen(TASKS, "r");
 					temp = fopen(TEMP, "w");
-					inventory = fopen(INVENTORY, "r");
+					inventory = fopen(filePathI, "r");
 
-					struct Profile p1;
 					struct Item i1;
-					int balance, oldBalance, exp, check = 1;
-					
-					fscanf(inventory, "Currency: %d\n\n", &oldBalance);
-					if(inventory == NULL || oldBalance == 0){
-						fclose(inventory);
-					}
+					int balance, oldBalance, exp;
 				
+					if(inventory == NULL){
+						inventory = fopen(filePathI, "w");
+						fprintf(inventory, "Currency: 0\n\n");
+						fclose(inventory);
+						inventory = fopen(filePathI, "r");
+					}
+					fscanf(inventory, "Currency: %d\n\n", &oldBalance);
+
+					balance = oldBalance + reward;						fprintf(temp, "Currency: %d\n\n", balance);
+
 					while(fscanf(inventory, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
-						if(check == 1){
-							balance = oldBalance + reward;
-							fprintf(temp, "%d\n\n", balance);
-							check = 0;
-						}
 						fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 					}
-					fclose(temp); fclose(fptr), fclose(inventory);
-					remove(INVENTORY);
-					rename(TEMP, INVENTORY);
+					fclose(temp); fclose(inventory);
+					remove(filePathI);
+					rename(TEMP, filePathI);
 
 					temp = fopen(TEMP, "w");
-					profile = fopen(filePath, "r");
+					profile = fopen(filePathP, "r");
 
 					if(profile == NULL){
-						profile = fopen(filePath, "w");
-						printf("Profil bulunamadi! Yeni profil olusturuluyor...\nKullanici adiniz (Max 30 harf): ");
+						profile = fopen(filePathP, "w");
 						char userName[MAX_USER_NAME];
+						printf("Profil bulunamadi! Yeni profil olusturuluyor...\nKullanici adiniz (Max 30 harf): ");
 						scanf("%s", userName);
-						fprintf(profile, "User: %s, Currency: %d, Exp: 0", userName, balance);
-						fclose(profile);
-						profile = fopen(filePath, "r");
+						
+						printf("Yeni sifre: ");
+						scanf("%s", p1.passwd);
 
-						return;
+						hash = hashPassword(p1.passwd);
+						fprintf(profile, "User: %s, Password: %lu\n\nCurrency: %d\nExp: 0\nLevel: 0, Exp Bar ==> %s\n", userName, hash, balance, p1.expBar);
+						fclose(profile);
+						profile = fopen(filePathP, "r");
 					}
 					
-					fscanf(profile, "User: %[^,], Currency: %d, Exp: %d", p1.user, &p1.currency, &p1.exp);
+					fscanf(profile, "User: %[^,], Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", p1.user, &hash, &p1.currency, &p1.exp, &p1.level, p1.expBar);
 					exp = p1.exp + expGain; 
 					
-					fprintf(temp, "User: %s, Currency: %d, Exp: %d", p1.user, balance, exp);
+					fprintf(temp, "User: %s, Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", p1.user, hash, balance, exp, p1.level, p1.expBar);
 
 					fclose(temp); fclose(profile);
-					remove(filePath);
-					rename(TEMP, filePath);
+					remove(filePathP);
+					rename(TEMP, filePathP);
 
 					printf("Gorev tamamlandı!");
 				}
 			}
 
-			if(decision == 3){
+			else if(decision == 3){
 				FILE *fptr = fopen(TASKS, "r");
 			       	FILE *temp = fopen(TEMP, "w");
 				
 				char searchName[MAX_TASK_NAME];
 				
+				if(fptr == NULL){
+					printf("Gorev listesi bos! Gorev ekleyiniz!");
+					return;
+				}
 				printf("Hangi görevin parametrelerini degistirmek istiyorsunuz?");
-				scanf("%s", searchName);
+				scanf(" %[^\n]", searchName);
 
 				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
 					if(strcmp(searchName, k1.taskName) != 0)
@@ -202,7 +212,7 @@ void taskMenu(char filePath[100]){
 
 							if(decision == 1){
 								printf("Yeni gorev adini giriniz: ");
-								scanf("%[^\n]", searchName);
+								scanf(" %[^\n]", searchName);
 								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", searchName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 								printf("Gorev adi degistirildi!");
 							}
@@ -232,7 +242,7 @@ void taskMenu(char filePath[100]){
 								printf("Yeni detayi giriniz: ");
 								while(getchar() != '\n');
 
-								fgets(k1.taskDetails, sizeof(k1.taskDetails), stdin);
+								scanf(" %[^\n]", k1.taskDetails);
 								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 							}
 
@@ -253,11 +263,11 @@ void taskMenu(char filePath[100]){
 				rename(TEMP, TASKS);
 			}
 
-			if(decision == 4){
+			else if(decision == 4){
 				FILE *finished = fopen(FINISHED, "r");
 		
 				if(finished == NULL){
-					printf("Mevcut gorev yok!");
+					printf("Bitmis gorev yok!");
 				}
 			
 				else {
@@ -276,10 +286,15 @@ void taskMenu(char filePath[100]){
 
 			}
 
-			if(decision == 5){
+			else if(decision == 5){
 				FILE *fptr = fopen(TASKS, "r");
 				FILE *temp = fopen(TEMP, "w");
 				char deleteQuest[MAX_TASK_NAME];
+
+				if(fptr == NULL){
+					printf("Gorev listesi bos! Gorev ekleyiniz!");
+					return;
+				}
 
 				printf("Silmek istediginiz gorevin adi: ");
 				scanf(" %[^\n]", deleteQuest);
@@ -302,7 +317,11 @@ void taskMenu(char filePath[100]){
 
 					remove(TASKS);
 					rename(TEMP, TASKS);
-				}
+			}
+
+			else{
+				return;
+			}
 				
 }
 

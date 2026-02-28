@@ -3,21 +3,23 @@
 #include <string.h>
 #include "../settings.h"
 
-void inventory(){
-	FILE *fptr = fopen(INVENTORY, "r");
+void inventory(char filePathI[100]){
+	FILE *fptr;
 	FILE *temp = fopen(TEMP, "w");
 	char itemSelect[MAX_ITEM_NAME];
 	int balance = 0;
 	bool check = 0, isExist = 0;
 	struct Item i1;
+	
+	fptr = fopen(filePathI, "r");
 
 	printf("\n======Inventory======\n");
 
 	if(fptr == NULL){
-		fptr = fopen(INVENTORY, "w");
+		fptr = fopen(filePathI, "w");
 		fprintf(fptr, "Currency: %d\n\n", balance);
 		fclose(fptr);
-		fptr = fopen(INVENTORY, "r");
+		fptr = fopen(filePathI, "r");
 	}
 	
 	fscanf(fptr, "Currency: %d\n\n", &balance);
@@ -44,8 +46,8 @@ void inventory(){
 			else{
 				if((i1.itemCount - 1) != 0){
 					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount - 1, i1.itemDetails);
-					check = 1;
 				}
+				check = 1;
 			}
 		}
 	}
@@ -59,7 +61,7 @@ void inventory(){
 
 	fclose(fptr); fclose(temp);
 	if(isExist == 1){
-			remove(INVENTORY);
-			rename(TEMP, INVENTORY);
+			remove(filePathI);
+			rename(TEMP, filePathI);
 	}
 }

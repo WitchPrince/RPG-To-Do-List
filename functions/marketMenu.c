@@ -3,7 +3,7 @@
 #include <string.h>
 #include "../settings.h"
 
-void marketMenu(char filePath[100]){
+void marketMenu(char filePathP[100], char filePathI[100]){
 		FILE *fptr;
 		FILE *temp;
 		FILE *inventory;
@@ -12,9 +12,10 @@ void marketMenu(char filePath[100]){
 		struct Market m1;
 		struct Item i1;
 		struct Profile p1;
+		strcpy(p1.expBar, "[__________]");
 
 		int decision, check = 1;
-		//char filePath[100];
+		unsigned long hash;
 
 		if((fptr = fopen(MARKET, "r")) == NULL){
 			printf("Dosya mevcut degil! Lutfen urun ekleyerek dosyayı olusturunuz.\n");
@@ -33,11 +34,12 @@ void marketMenu(char filePath[100]){
 		scanf("%d", &decision);
 
 	if(decision == 1){
-			bool foundInMarket = 0;
+			bool foundInMarket = 1;
 	       		int balance, oldBalance;	
 			char wanted[MAX_ITEM_NAME];
 			fptr = fopen(MARKET, "r");
-			inventory = fopen(INVENTORY, "r");
+			inventory = fopen(filePathI, "r");
+			temp = fopen(TEMP, "w");
 
 			if(fptr == NULL){
 				printf("Market dosyasi bos! Lutfen urun ekleyin!");
@@ -45,82 +47,103 @@ void marketMenu(char filePath[100]){
 			}
 
 			if(inventory == NULL){
-				inventory = fopen(INVENTORY, "w");
-				fprintf(inventory, "0\n\n");
-				fclose(inventory);
+				inventory = fopen(filePathI, "w+");
+				fprintf(inventory, "Currency: 0\n\n");
+				rewind(inventory);
 			}
 
 			printf("Hangi urunu almak istiyorsunuz: ");
-			scanf("%s", wanted);
+			scanf(" %[^\n]", wanted);
 			
-			while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", m1.name, &m1.price, m1.detail) != EOF){
-				if(strcmp(wanted, m1.name) == 0) foundInMarket = 1;
+			while(fscanf(fptr, "(%d) Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", &m1.id, m1.name, &m1.price, m1.detail) != EOF){
+				if(strcmp(wanted, m1.name) == 0) {				
+					foundInMarket = 0;
+					break;
+				}
 			}
-			fclose(fptr);
-
-			if(foundInMarket == 0){
+			
+			if(foundInMarket){
 				printf("Urun bulunamadi!");
+				fclose(inventory); fclose(fptr); fclose(temp);
 				return;
 			}
 
 			//Bakiye okuma & yazdirma
 			else{
-				temp = fopen(TEMP, "w");
-
 				fscanf(inventory, "Currency: %d\n\n", &oldBalance);
 				if(oldBalance >= m1.price){
 					balance = oldBalance - m1.price;
-					fprintf(temp, "Currency: %d\n\n", balance);
 				}
 				else{
 					printf("Bakiyeniz yetersiz!");
+					fclose(inventory); fclose(fptr); fclose(temp);
 					return;
 				}
 			}
 		
-			//Envanterde bu itemden hiç yoksa ekleme yapılmıyor. Bu sorunu çöz.	
 			while(fscanf(inventory, " %[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
-				check = 0;
-				if(strcmp(wanted, i1.itemName) == 0){
-					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount + 1, i1.itemDetails);
-					printf("Urun alindi ve envanterinize eklendi! Kalan bakiyeniz: %d", balance);
-				}	
-			}	
+				if(strcmp(wanted, i1.itemName) == 0) check = 0;
+			}
+			rewind(inventory);	
+		
+			int tempBalance;
+			fscanf(inventory, "Currency: %d\n\n", &tempBalance);
 
+			fprintf(temp, "Currency: %d\n\n", balance);
 			if(check){
 				fprintf(temp, "%s, 1, Item Detaylari:\n%s\n\n", m1.name, m1.detail);
 			}
+			
+			while(fscanf(inventory, " %[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+				if(strcmp(wanted, i1.itemName) == 0){
+					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount + 1, i1.itemDetails);
+					printf("Urun alindi ve envanterinize eklendi! Kalan bakiyeniz: %d", balance);
+				}
+				else{
+					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
+				}
+			}
 
+			fclose(fptr); fclose(temp); fclose(inventory);
+			remove(filePathI);
+			rename(TEMP, filePathI);
 
-			fclose(temp); fclose(inventory);
-			remove(INVENTORY);
-			rename(TEMP, INVENTORY);
-
-			if(foundInMarket == 1){
-				temp = fopen(TEMP, "w");
-				profile = fopen(filePath, "r");
+			if(foundInMarket == 0){
+				temp = fopen(TEMPU, "w");
+				profile = fopen(filePathP, "r");
 
 				if(profile == NULL){
-					profile = fopen(filePath, "w");
+					profile = fopen(filePathP, "w");
 					printf("Profile dosyasi bulunamadi. Yenisi olusturuluyor...\nKullanici adi: ");
 					scanf("%s", p1.user);
-					fprintf(profile, "User: %s, Currency: 0, Exp: 0", p1.user);
+					printf("Yeni sifre: ");
+					scanf("%s", p1.passwd);
+					hash = hashPassword(p1.passwd);
+
+					fprintf(profile, "User: %s, Password: %lu\n\nCurrency: 0\nExp: 0\nLevel: 0, Exp Bar ==> %s\n", p1.user, hash, p1.expBar);
 					fclose(profile);
-					profile = fopen(filePath, "r");
+					profile = fopen(filePathP, "r");
 				}
 
-				fscanf(profile, "User: %[^,], Currency: %d, Exp: %d", p1.user, &p1.currency, &p1.exp);
-				fprintf(temp, "User: %s, Currency: %d, Exp: %d", p1.user, balance, p1.exp);
+				fscanf(profile, "User: %[^,], Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", p1.user, &hash, &p1.currency, &p1.exp, &p1.level, p1.expBar);
+				fprintf(temp, "User: %s, Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", p1.user, hash, balance, p1.exp, p1.level, p1.expBar);
 				
 				fclose(profile); fclose(temp);
-				remove(filePath);
-				rename(TEMP, filePath);	
+				remove(filePathP);
+				rename(TEMPU, filePathP);	
 			}
 	}
 
 	if(decision == 2){
-		fptr = fopen(MARKET, "a");
-			
+		fptr = fopen(MARKET, "a+");
+		m1.id = 0;
+
+		while(fscanf(fptr, "(%d) Product: %[^,], Price: %d\nItem Details: %s\n\n", &m1.id, m1.name, &m1.price, m1.detail) != EOF);
+
+		if(m1.id == 0) m1.id = 1;
+		else           m1.id += 1;
+		rewind(fptr);
+
 		while(decision != 0){
 			printf("\nEklenecek urunun ismi: ");
 			scanf(" %[^\n]", m1.name);
@@ -129,10 +152,11 @@ void marketMenu(char filePath[100]){
 			printf("Urun detayi: ");
 			scanf(" %[^\n]", m1.detail);
 
-			fprintf(fptr, "Product: %s, Price: %d\nItem Details: %s\n\n", m1.name, m1.price, m1.detail);
+			fprintf(fptr, "(%d) Product: %s, Price: %d\nItem Details: %s\n\n", m1.id, m1.name, m1.price, m1.detail);
 
 			printf("\nBaska urun eklemek ister misiniz? (1/0): ");
 			scanf("%d", &decision);
+			m1.id++;
 		}
 		fclose(fptr);
 	}
@@ -141,33 +165,43 @@ void marketMenu(char filePath[100]){
 		fptr = fopen(MARKET, "r");
 		temp = fopen(TEMP, "w");
 		
-		if(fptr == NULL || temp == NULL){
-			printf("Market dosyasi bos! Urun ekleyin.");
+		if(fptr == NULL){
+			printf("\nMarket dosyasi bos! Urun ekleyin.");
+			fclose(temp);
+			remove(TEMP);
 			return;
 		}
 		
 		char deleteName[50];
-		bool check;
+		bool check = 0;
 
-		printf("Silmek istediginiz urunun ismini giriniz: ");
+		printf("\nSilmek istediginiz urunun ismini giriniz: ");
 		scanf("%s", deleteName);
-
-		if(fptr != NULL || temp != NULL){
-			while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details: %[^\n]\n\n", m1.name, &m1.price, m1.detail) != EOF){
-				if(strcmp(m1.name, deleteName) != 0){
-					fprintf(temp, "Product: %s, Price: %d\n", m1.name, m1.price);
-				}
-				else check = 1;
-				}
+		while(fscanf(fptr, "(%d) Product: %[^,], Price: %d\nItem Details: %[^\n]\n\n", &m1.id, m1.name, &m1.price, m1.detail) != EOF){
+			if(strcmp(m1.name, deleteName) != 0){
+				fprintf(temp, "(%d) Product: %s, Price: %d\nItem Details: %s\n\n", m1.id, m1.name, m1.price, m1.detail);
+			}
+			else check = 1;
 		}
 
 		fclose(fptr); fclose(temp);
 
 		remove(MARKET);
 		rename(TEMP, MARKET);
-
-		if(check == 1) printf("Urun bulundu ve silindi!");
+	
+		m1.id = 0;
+		if(check == 1){
+			printf("Urun bulundu ve silindi!");
+			fptr = fopen(MARKET, "r");
+			if(fscanf(fptr, "(%d) Product: %s, Price: %d\nItem Details: %s", &m1.id, m1.name, &m1.price, m1.detail) != EOF){
+				if(m1.id == 0){
+					fclose(fptr);
+					remove(MARKET);
+				}
+			}
+		} 
 		else printf("Urun bulunamadi!");
+		fclose(fptr);
 	}
 
 	if(decision == 4){
@@ -182,12 +216,12 @@ void marketMenu(char filePath[100]){
 		printf("Yeni fiyat: ");
 		scanf("%d", &changePrice);
 
-		while(fscanf(fptr, "Product: %[^,], Price: %d\nItem Details: %[^\n]\n\n", m1.name, &m1.price, m1.detail) != EOF){
+		while(fscanf(fptr, "(%d) Product: %[^,], Price: %d\nItem Details: %[^\n]\n\n", &m1.id, m1.name, &m1.price, m1.detail) != EOF){
 			if(strcmp(searchName, m1.name) != 0){
-				fprintf(temp, "Product: %s, Price: %d\nItem Details: %s\n\n", m1.name, m1.price, m1.detail);
+				fprintf(temp, "(%d) Product: %s, Price: %d\nItem Details: %s\n\n", m1.id, m1.name, m1.price, m1.detail);
 			}
 			else{
-				fprintf(temp, "Product: %s, Price: %d\nItem Details: %s\n\n", m1.name, changePrice, m1.detail);
+				fprintf(temp, "(%d) Product: %s, Price: %d\nItem Details: %s\n\n", m1.id, m1.name, changePrice, m1.detail);
 				check = 1;
 			}
 		}

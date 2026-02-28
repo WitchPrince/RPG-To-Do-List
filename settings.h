@@ -3,6 +3,29 @@
 
 #include <stdbool.h>
 
+//=================================================
+//some syntax templates for remembering file syntax
+//=================================================
+//==========
+//Inventory:
+//Currency: %d\n%s, %d, Item Detaylari:\n%s\n\n
+
+//=======
+//Market:
+//(%d) Product: %s, Price: %d\nItem Details:%s\n\n
+
+//==========
+//Task Menu:
+//Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n
+
+//=========
+//Namelist:
+//(%d) User: %s\n
+
+//========
+//Profile:
+//User: %s, Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n
+
 //metin uzunluklari etc.
 #define MAX_NAME 50
 
@@ -20,16 +43,17 @@
 //Dizinler
 #define MARKET "database/market.txt"
 #define TEMP "database/temp.txt"
+#define TEMPU "database/users/temp.txt"
 #define TASKS "database/tasks.txt"
 #define FINISHED "database/finished-tasks.txt"
-#define INVENTORY "database/inventory.txt"
+#define INVENTORY "database/%s-inventory.txt"
 #define USERLIST "database/users/userList.txt"
 
 //structlar
 struct Market {
 	char name[MAX_NAME];
 	char detail[MAX_ITEM_DETAILS];
-	int price, count;
+	int price, id;
 };
 
 struct Tasks{
@@ -46,17 +70,17 @@ struct Item{
 };
 
 struct Profile{
-	char user[MAX_USER_NAME], passwd[MAX_PASSWD], expBar[12];
-	int currency, exp, number;
+	char user[MAX_USER_NAME], passwd[MAX_PASSWD], expBar[13];
+	int currency, exp, level, number;
 };
 
 //fonksiyonlar
-void marketMenu(char filePath[100]);
-void taskMenu(char filePath[100]);
-void inventory();
+void marketMenu(char filePathP[100], char filePathI[100]);
+void taskMenu(char filePathP[100], char filePathI[100]);
+void inventory(char filePathI[100]);
 void profileMenu(int userNumber);
 int userMenu();
-void cheats();
+void cheats(char userName[MAX_USER_NAME]);
 unsigned long hashPassword(char *str);
 
 #endif

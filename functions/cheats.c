@@ -3,26 +3,36 @@
 #include <string.h>
 #include "../settings.h"
 
-void cheats(){
+void cheats(char userName[MAX_USER_NAME]){
 	struct Item i1;
-	FILE *inventory, *temp;
+	struct Profile p1;
+	FILE *inventory, *temp, *profile;
 	int decision, oldBalance, balance, currency;
+	unsigned long hashInFile;
+	char filePathP[100], filePathI[100];
+
+	sprintf(filePathP, USER_DIR, userName);
+	sprintf(filePathI, INVENTORY, userName);
+
+	strcpy(p1.expBar, "[__________]");
 
 	printf("\n-----------------------");
 	printf("Cheat Menu");	
 	printf("-----------------------\n");
 
-	printf("Choose transaction:\n(1) Add Currency\n");
+	printf("Choose transaction:\n(1) Add Currency\n(Else) Exit\nDecision: ");
 	scanf("%d", &decision);
 
 	if(decision == 1){
-		inventory = fopen(INVENTORY, "r");
+		inventory = fopen(filePathI, "r");
 		
 		if(inventory == NULL){
-			inventory = fopen(INVENTORY, "w");
+			inventory = fopen(filePathI, "w");
+
 			fprintf(inventory, "Currency: 0\n\n");
 			fclose(inventory);
-			inventory = fopen(INVENTORY, "r");
+
+			inventory = fopen(filePathI, "r");
 		}
 
 		temp = fopen(TEMP, "w");
@@ -38,7 +48,22 @@ void cheats(){
 		}
 
 		fclose(temp); fclose(inventory);
-			remove(INVENTORY);
-			rename(TEMP, INVENTORY);
+		remove(filePathI);
+		rename(TEMP, filePathI);
+		
+		temp = fopen(TEMP, "w");
+		profile = fopen(filePathP, "r");
+	
+		fscanf(profile, "User: %[^,], Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", userName, &hashInFile, &p1.currency, &p1.exp, &p1.level, p1.expBar);
+	
+		fprintf(temp, "User: %s, Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", userName, hashInFile, balance, p1.exp, p1.level, p1.expBar);
+
+		fclose(temp); fclose(profile);
+		remove(filePathP);
+		rename(TEMP, filePathP);
+	}
+
+	else{
+		return;
 	}
 }
