@@ -11,7 +11,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 
 		struct Tasks k1;
 		struct Profile p1;
-		int decision;
+		int subDecision;
 		bool check = 0;
 	 	unsigned long hash;
 		strcpy(p1.expBar, "[__________]"); 
@@ -32,10 +32,10 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				fclose(fptr);
 			}
 
-			printf("\nHangi islemi yapmak istiyorsunuz?\n(1) Add quest\n(2) Complete quest\n(3) Change quest parameters\n(4) Show finished quests\n(5) Delete quest\nDecision: ");
-			scanf("%d", &decision);
+			printf("\nHangi islemi yapmak istiyorsunuz?\n(1) Add quest\n(2) Complete quest\n(3) Change quest parameters\n(4) Show finished quests\n(5) Delete quest\n(6) Exit\nDecision: ");
+			scanf("%d", &subDecision);
 
-			if(decision == 1){
+			if(subDecision == 1){
 				int oto, detay;
 				bool isDuplicate;
 				char name[MAX_TASK_NAME];
@@ -97,7 +97,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				fclose(fptr);
 			}
 
-			else if(decision == 2){
+			else if(subDecision == 2){
 				FILE *finished = fopen(FINISHED, "a");
 				fptr = fopen(TASKS, "r");
 				temp = fopen(TEMP, "w");
@@ -107,6 +107,8 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 
 				if(fptr == NULL){
 					printf("Gorev listesi bos! Gorev ekleyiniz!");
+					fclose(fptr); fclose(temp); fclose(finished);
+					remove(TEMP);
 					return;
 				}
 				printf("Tamamlamak istediginiz gorevin ismini yaziniz: ");
@@ -190,7 +192,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				}
 			}
 
-			else if(decision == 3){
+			else if(subDecision == 3){
 				FILE *fptr = fopen(TASKS, "r");
 			       	FILE *temp = fopen(TEMP, "w");
 				
@@ -198,6 +200,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				
 				if(fptr == NULL){
 					printf("Gorev listesi bos! Gorev ekleyiniz!");
+					fclose(fptr); fclose(temp);
 					return;
 				}
 				printf("Hangi görevin parametrelerini degistirmek istiyorsunuz?");
@@ -208,37 +211,37 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 					else{
 						printf("Hangi parametreyi degistirmek istiyorsunuz:\n(1) Task Name\n(2) Hardness\n(3) Reward\n(4) Exp\n(5) Details\nDecision: ");
-						scanf("%d", &decision);
+						scanf("%d", &subDecision);
 
-							if(decision == 1){
+							if(subDecision == 1){
 								printf("Yeni gorev adini giriniz: ");
 								scanf(" %[^\n]", searchName);
 								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", searchName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 								printf("Gorev adi degistirildi!");
 							}
 
-							else if(decision == 2){
+							else if(subDecision == 2){
 								printf("Yeni zorluk duzeyini giriniz (1-5): ");
 								scanf("%d", &k1.hardness);
 								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 								printf("Gorev zorluk seviyesi degistirildi!");
 							}
 
-							else if(decision == 3){
+							else if(subDecision == 3){
 								printf("Yeni odul miktarini giriniz: ");
 								scanf("%d", &k1.reward);
 								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 								printf("Gorev odul miktari degistirildi!");
 							}
 
-							else if(decision == 4){
+							else if(subDecision == 4){
 								printf("Yeni exp miktarini giriniz: ");
 								scanf("%d", &k1.exp);
 								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
 								printf("Gorev exp miktari degistirildi!");
 							}
 
-							else if(decision == 5){
+							else if(subDecision == 5){
 								printf("Yeni detayi giriniz: ");
 								while(getchar() != '\n');
 
@@ -263,7 +266,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				rename(TEMP, TASKS);
 			}
 
-			else if(decision == 4){
+			else if(subDecision == 4){
 				FILE *finished = fopen(FINISHED, "r");
 		
 				if(finished == NULL){
@@ -286,7 +289,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 
 			}
 
-			else if(decision == 5){
+			else if(subDecision == 5){
 				FILE *fptr = fopen(TASKS, "r");
 				FILE *temp = fopen(TEMP, "w");
 				char deleteQuest[MAX_TASK_NAME];
@@ -319,7 +322,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 					rename(TEMP, TASKS);
 			}
 
-			else{
+			else if(subDecision == 6){
 				return;
 			}
 				

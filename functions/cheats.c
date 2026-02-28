@@ -20,7 +20,7 @@ void cheats(char userName[MAX_USER_NAME]){
 	printf("Cheat Menu");	
 	printf("-----------------------\n");
 
-	printf("Choose transaction:\n(1) Add Currency\n(Else) Exit\nDecision: ");
+	printf("Choose transaction:\n(1) Add Currency\n(2) Exit\nDecision: ");
 	scanf("%d", &decision);
 
 	if(decision == 1){
@@ -43,7 +43,7 @@ void cheats(char userName[MAX_USER_NAME]){
 		balance = oldBalance + currency;
 
 		fprintf(temp, "Currency: %d\n\n", balance);
-		while(fscanf(inventory, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+		while(fscanf(inventory, " %[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 			fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 		}
 
@@ -63,7 +63,7 @@ void cheats(char userName[MAX_USER_NAME]){
 		rename(TEMP, filePathP);
 	}
 
-	else{
+	else if(decision == 2){
 		return;
 	}
 }

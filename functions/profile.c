@@ -16,7 +16,7 @@ void profileMenu(int userNumber){
 	fclose(nameList);
 	sprintf(filePath, USER_DIR, p1.user);
 	profile = fopen(filePath, "r");
-
+	
 	char i;
 	while(1){
 				i = fgetc(profile);

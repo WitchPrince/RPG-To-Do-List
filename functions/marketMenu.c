@@ -19,6 +19,7 @@ void marketMenu(char filePathP[100], char filePathI[100]){
 
 		if((fptr = fopen(MARKET, "r")) == NULL){
 			printf("Dosya mevcut degil! Lutfen urun ekleyerek dosyayı olusturunuz.\n");
+			return;
 		}
 		else{
 			char i;
