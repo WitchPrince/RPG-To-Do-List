@@ -180,8 +180,21 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 					}
 					
 					fscanf(profile, "User: %[^,], Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", p1.user, &hash, &p1.currency, &p1.exp, &p1.level, p1.expBar);
+
 					exp = p1.exp + expGain; 
+					p1.level = exp / 100;
 					
+					if(exp % 100 != 0){
+						strcpy(p1.expBar, "[");
+							for(int a = 10; a <= exp % 100; a+=10){
+								strcat(p1.expBar, "=");
+							}
+							for(int a = 10; a < 100 - (exp % 100); a += 10){
+								strcat(p1.expBar, "_");
+							}
+						strcat(p1.expBar, "]");
+					}
+
 					fprintf(temp, "User: %s, Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", p1.user, hash, balance, exp, p1.level, p1.expBar);
 
 					fclose(temp); fclose(profile);
