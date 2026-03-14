@@ -43,7 +43,7 @@ int userMenu(){
 					fscanf(profile, "User: %[^,], Password: %lu", userName, &hashInFile);
 
 					if(hash == hashInFile){
-						printf("\nGiris basarili! Hosgeldiniz %s", userName);
+						printf("\nGiris basarili! Hosgeldiniz %s\n", userName);
 						fclose(nameList); fclose(profile);
 						return userNumber;
 					}

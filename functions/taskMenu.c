@@ -280,26 +280,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 			}
 
 			else if(subDecision == 4){
-				FILE *finished = fopen(FINISHED, "r");
-		
-				if(finished == NULL){
-					printf("Bitmis gorev yok!");
-				}
-			
-				else {
-					printf("\n-------------------------------------------------------\n");
-					char i;
-					
-					while(1){
-						i = fgetc(finished);
-						if(i == EOF) break;
-						else	printf("%c", i);
-					}
-				
-					printf("\n-------------------------------------------------------\n");
-					fclose(finished);
-				}
-
+				showFinishedTasks();
 			}
 
 			else if(subDecision == 5){
@@ -341,3 +322,190 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				
 }
 
+void showFinishedTasks(){
+	FILE *finished = fopen(FINISHED, "r");
+
+	if(finished == NULL){
+		printf("Bitmis gorev yok!");
+	}
+			
+	else {
+		printf("\n-------------------------------------------------------\n");
+		char i;
+					
+		while(1){
+			i = fgetc(finished);
+			if(i == EOF) break;
+			else	printf("%c", i);
+		}
+				
+		printf("\n-------------------------------------------------------\n");
+		fclose(finished);
+	}
+}
+
+void addTaskDirectly(char *taskName, int hardness, int autoCalc, int reward, int exp, char *details) {
+	FILE *fptr = fopen(TASKS, "a");
+
+	if(autoCalc == 1) {
+        	reward = hardness * 50;
+        	exp = hardness * 5;
+   	}
+
+    	else{
+		printf("\nGorevin odul miktarini giriniz: ");
+	    	scanf("%d", &reward);
+	    	printf("\nGorevin exp miktarini giriniz: ");
+	    	scanf("%d", &exp);
+	}
+
+	if(strlen(details) == 0) {
+        	strcpy(details, "Gorev detayi eklenmemis!");
+    	}
+
+	fprintf(fptr, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", taskName, hardness, reward, exp, details);
+
+	fclose(fptr);
+	printf("Gorev basariyla eklendi!\n");
+}
+
+void deleteTaskDirectly(char *taskName) {
+	FILE *fptr = fopen(TASKS, "r");
+	FILE *temp = fopen(TEMP, "w");
+	struct Tasks k1;
+    	bool check = 0;
+
+    	if(fptr == NULL){
+        	printf("Gorev listesi bos!\n");
+        	return;
+    	}
+
+    	while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+        	if(strcmp(taskName, k1.taskName) != 0){
+            		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+        	}
+		
+		else {
+            		check = 1;
+        	}
+    	}
+
+    	if(check == 0) printf("Girdiginiz isimde bir gorev bulunamadi!\n");
+    	else printf("Silme islemi basarili!\n");
+
+    	fclose(fptr); fclose(temp);
+    	remove(TASKS); rename(TEMP, TASKS);
+}
+
+void changeTaskParamDirectly(char *taskName, int paramType, char *newValueStr) {
+    	FILE *fptr = fopen(TASKS, "r");
+	FILE *temp = fopen(TEMP, "w");
+    	struct Tasks k1;
+    	bool check = 0;
+
+    	if(fptr == NULL){
+        	printf("Gorev listesi bos!\n");
+        	fclose(temp);
+        	return;
+    	}
+
+    	while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+        	if(strcmp(taskName, k1.taskName) != 0){
+            		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+        	}
+		
+		else {
+            		check = 1;
+            		if(paramType == 1) strcpy(k1.taskName, newValueStr);
+            		else if(paramType == 2) k1.hardness = atoi(newValueStr);
+            		else if(paramType == 3) k1.reward = atoi(newValueStr);
+            		else if(paramType == 4) k1.exp = atoi(newValueStr);
+            		else if(paramType == 5) strcpy(k1.taskDetails, newValueStr);
+
+            		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+            		printf("Parametre basariyla degistirildi!\n");
+        	}
+    	}	
+
+    	if(check == 0) printf("Girdiginiz gorev listede yok!\n");
+    	fclose(temp); fclose(fptr);
+    	remove(TASKS); rename(TEMP, TASKS);
+}
+
+void completeTaskDirectly(char *taskName, char filePathP[100], char filePathI[100]) {
+    	FILE *finished = fopen(FINISHED, "a");
+    	FILE *fptr = fopen(TASKS, "r");
+    	FILE *temp = fopen(TEMP, "w");
+    	struct Tasks k1;
+    	struct Profile p1;
+    	int reward, expGain;
+    	bool check = 0;
+
+    	if(fptr == NULL){
+        	printf("Gorev listesi bos!\n");
+        	fclose(temp); fclose(finished); remove(TEMP);
+        	return;
+    	}
+
+    	while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+        	if(strcmp(taskName, k1.taskName) != 0){
+        		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+        	}
+	
+		else {
+        		fprintf(finished, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+        		reward = k1.reward; expGain = k1.exp; check = 1;
+        	}
+    	}
+    	fclose(finished); fclose(temp); fclose(fptr);
+    	remove(TASKS); rename(TEMP, TASKS);
+
+    	if(check == 0){
+   		printf("Gorev bulunamadi!\n");
+    		return;
+    	}
+
+    	FILE *inventory = fopen(filePathI, "r");
+    	temp = fopen(TEMP, "w");
+    	struct Item i1;
+    	int balance, oldBalance, exp;
+
+    	if(inventory == NULL){
+        	inventory = fopen(filePathI, "w");
+        	fprintf(inventory, "Currency: 0\n\n");
+        	fclose(inventory); inventory = fopen(filePathI, "r");
+    	}
+
+    	fscanf(inventory, "Currency: %d\n\n", &oldBalance);
+    	balance = oldBalance + reward;
+    	fprintf(temp, "Currency: %d\n\n", balance);
+    	
+	while(fscanf(inventory, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+        	fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
+    	}
+    
+	fclose(temp); fclose(inventory);
+    	remove(filePathI);
+    	rename(TEMP, filePathI);
+
+    	FILE *profile = fopen(filePathP, "r");
+    	temp = fopen(TEMP, "w");
+    	unsigned long hash;
+
+    	fscanf(profile, "User: %[^,], Password: %lu\n\nCurrency: %*d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", p1.user, &hash, &p1.exp, &p1.level, p1.expBar);
+
+    	exp = p1.exp + expGain;
+    	p1.level = exp / 100;
+
+    	if(exp % 100 != 0){
+        	strcpy(p1.expBar, "[");
+        	for(int a = 10; a <= exp % 100; a+=10) strcat(p1.expBar, "=");
+        	for(int a = 10; a < 100 - (exp % 100); a += 10) strcat(p1.expBar, "_");
+        	strcat(p1.expBar, "]");
+    	}
+    	fprintf(temp, "User: %s, Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", p1.user, hash, balance, exp, p1.level, p1.expBar);
+
+    	fclose(temp); fclose(profile); remove(filePathP); rename(TEMP, filePathP);
+
+    	printf("Gorev tamamlandi! (+%d Gold, +%d Exp)\n", reward, expGain);
+}

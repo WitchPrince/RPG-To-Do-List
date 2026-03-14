@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -std=c99 -Wall
 
-SRCS = main.c functions/taskMenu.c functions/marketMenu.c functions/inventory.c functions/cheats.c functions/profile.c functions/userMenu.c
+SRCS = main.c functions/taskMenu.c functions/marketMenu.c functions/inventory.c functions/cheats.c functions/profile.c functions/userMenu.c functions/auto-login.c
 
 ifeq ($(OS),Windows_NT)
 	TARGET = rpg.exe
@@ -27,7 +27,7 @@ ifeq ($(OS),Windows_NT)
 install: all
 	@echo @echo off > rpg.bat
 	@echo cd /d "$(CURDIR)" >> rpg.bat
-	@echo $(TARGET) >> rpg.bat
+	@echo $(TARGET) %%* >> rpg.bat
 	@echo Sistem geneline kurulum yapiliyor (Yonetici izni gerekebilir)...
 	@copy /Y rpg.bat "C:\Windows\rpg.bat" >nul || (echo HATA: C:\Windows dizinine erisim engellendi. Lutfen terminali Yonetici (Administrator) olarak calistirin! && exit 1)
 	@echo Kurulum basarili! Herhangi bir terminalde 'rpg' yazarak baslatabilirsin.
@@ -40,7 +40,7 @@ else
 install: all
 	@echo Sistem geneline kurulum yapiliyor...
 	@echo '#!/bin/bash' > rpg_launcher
-	@echo 'cd "$(CURDIR)" && ./$(TARGET)' >> rpg_launcher
+	@echo 'cd "$(CURDIR)" && ./$(TARGET) "$$@"' >> rpg_launcher
 	@chmod +x rpg_launcher
 	@sudo mv rpg_launcher /usr/local/bin/$(TARGET)
 	@echo Kurulum basarili! 'rpg' yazarak baslatabilirsin.

@@ -48,6 +48,7 @@
 #define FINISHED "database/finished-tasks.txt"
 #define INVENTORY "database/%s-inventory.txt"
 #define USERLIST "database/users/userList.txt"
+#define ALIAS "database/alias.txt"
 
 //structlar
 struct Market {
@@ -82,5 +83,14 @@ void profileMenu(int userNumber);
 int userMenu();
 void cheats(char userName[MAX_USER_NAME]);
 unsigned long hashPassword(char *str);
+void autoLogin(char user[MAX_USER_NAME]);
+void logOut();
+
+//fast functions
+void showFinishedTasks();
+void addTaskDirectly(char *taskName, int hardness, int autoCalc, int reward, int exp, char *details);
+void completeTaskDirectly(char *taskName, char filePathP[100], char filePathI[100]);
+void deleteTaskDirectly(char *taskName);
+void changeTaskParamDirectly(char *taskName, int paramType, char *newValueStr);
 
 #endif
