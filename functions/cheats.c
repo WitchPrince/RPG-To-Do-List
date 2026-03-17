@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../settings.h"
 
 void cheats(char userName[MAX_USER_NAME]){

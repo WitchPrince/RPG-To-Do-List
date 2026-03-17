@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../settings.h"
 
 void marketMenu(char filePathP[100], char filePathI[100]){
@@ -19,7 +16,6 @@ void marketMenu(char filePathP[100], char filePathI[100]){
 
 		if((fptr = fopen(MARKET, "r")) == NULL){
 			printf("Dosya mevcut degil! Lutfen urun ekleyerek dosyayı olusturunuz.\n");
-			return;
 		}
 		else{
 			char i;
@@ -31,12 +27,12 @@ void marketMenu(char filePathP[100], char filePathI[100]){
 		fclose(fptr);
 		}
 		printf("\n-------------------------------------------------------\n");
-		printf("Hangi islemi yapmak istiyorsunuz?\n\n(1) Buy\n(2) Add Product\n(3) Remove Product\n(4)Change Price\nDecision: ");
+		printf("Hangi islemi yapmak istiyorsunuz?\n\n(1) Buy\n(2) Add Product\n(3) Remove Product\n(4) Change Price\n(5) Exit\nDecision: ");
 		scanf("%d", &decision);
 
 	if(decision == 1){
 			bool foundInMarket = 1;
-	       		int balance, oldBalance;	
+	       		int balance, oldBalance, count;	
 			char wanted[MAX_ITEM_NAME];
 			fptr = fopen(MARKET, "r");
 			inventory = fopen(filePathI, "r");
@@ -55,6 +51,8 @@ void marketMenu(char filePathP[100], char filePathI[100]){
 
 			printf("Hangi urunu almak istiyorsunuz: ");
 			scanf(" %[^\n]", wanted);
+			printf("Kac tane almak istiyorsunuz: ");
+			scanf("%d", &count);
 			
 			while(fscanf(fptr, "(%d) Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", &m1.id, m1.name, &m1.price, m1.detail) != EOF){
 				if(strcmp(wanted, m1.name) == 0) {				
@@ -72,8 +70,8 @@ void marketMenu(char filePathP[100], char filePathI[100]){
 			//Bakiye okuma & yazdirma
 			else{
 				fscanf(inventory, "Currency: %d\n\n", &oldBalance);
-				if(oldBalance >= m1.price){
-					balance = oldBalance - m1.price;
+				if(oldBalance >= m1.price * count){
+					balance = oldBalance - m1.price * count;
 				}
 				else{
 					printf("Bakiyeniz yetersiz!");
@@ -92,12 +90,12 @@ void marketMenu(char filePathP[100], char filePathI[100]){
 
 			fprintf(temp, "Currency: %d\n\n", balance);
 			if(check){
-				fprintf(temp, "%s, 1, Item Detaylari:\n%s\n\n", m1.name, m1.detail);
+				fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", m1.name, count, m1.detail);
 			}
 			
 			while(fscanf(inventory, " %[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 				if(strcmp(wanted, i1.itemName) == 0){
-					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount + 1, i1.itemDetails);
+					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount + count, i1.itemDetails);
 					printf("Urun alindi ve envanterinize eklendi! Kalan bakiyeniz: %d", balance);
 				}
 				else{
@@ -135,7 +133,7 @@ void marketMenu(char filePathP[100], char filePathI[100]){
 			}
 	}
 
-	if(decision == 2){
+	else if(decision == 2){
 		fptr = fopen(MARKET, "a+");
 		m1.id = 0;
 
@@ -162,7 +160,7 @@ void marketMenu(char filePathP[100], char filePathI[100]){
 		fclose(fptr);
 	}
 
-	if(decision == 3){
+	else if(decision == 3){
 		fptr = fopen(MARKET, "r");
 		temp = fopen(TEMP, "w");
 		
@@ -205,7 +203,7 @@ void marketMenu(char filePathP[100], char filePathI[100]){
 		fclose(fptr);
 	}
 
-	if(decision == 4){
+	else if(decision == 4){
 		fptr = fopen(MARKET, "r");
 		FILE *temp = fopen(TEMP, "w");
 
@@ -237,5 +235,9 @@ void marketMenu(char filePathP[100], char filePathI[100]){
 			return;
 		}
 		else printf("%s urununun yeni degeri: %d", m1.name, changePrice);
+	}
+
+	else{
+		return;
 	}
 }

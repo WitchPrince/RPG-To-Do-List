@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../settings.h"
 
 void taskMenu(char filePathP[100], char filePathI[100]){
@@ -21,7 +18,6 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 			}
 			
 			else {
-				printf("\n-------------------------------------------------------\n");
 				char i;
 				while(1){
 					i = fgetc(fptr);
@@ -40,7 +36,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				bool isDuplicate;
 				char name[MAX_TASK_NAME];
 
-				printf("Gorev adi (Maks 80 karakter!): ");
+				printf("\nGorev adi (Maks 80 karakter!): ");
 				scanf(" %[^\n]", k1.taskName);
 					
 				do{
@@ -106,12 +102,12 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				char searchTask[MAX_TASK_NAME];
 
 				if(fptr == NULL){
-					printf("Gorev listesi bos! Gorev ekleyiniz!");
+					printf("\nGorev listesi bos! Gorev ekleyiniz!\n");
 					fclose(fptr); fclose(temp); fclose(finished);
 					remove(TEMP);
 					return;
 				}
-				printf("Tamamlamak istediginiz gorevin ismini yaziniz: ");
+				printf("\nTamamlamak istediginiz gorevin ismini yaziniz: ");
 				scanf(" %[^\n]", searchTask);
 
 				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){

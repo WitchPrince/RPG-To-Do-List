@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../settings.h"
 
 void inventory(char filePathI[100]){
@@ -30,7 +27,8 @@ void inventory(char filePathI[100]){
 		printf("%s, %d\nDescription: %s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 	}
 
-	printf("Hangi itemi kullanmak istiyorsunuz: ");
+	printf("\n-------------------------------------------------------\n");
+	printf("\nHangi itemi kullanmak istiyorsunuz (Cikis yapmak icin herhangi bir tusa basin): ");
 	scanf(" %[^\n]", itemSelect);
 
 	rewind(fptr);
@@ -50,12 +48,13 @@ void inventory(char filePathI[100]){
 				check = 1;
 			}
 		}
-	}
+	}	
+
 		if(check == 0){
-			printf("Girdiginiz item envanterinizde bulunamadi!");
+			printf("\nGirdiginiz item envanterinizde bulunamadi!\n");
 		}
 		else{
-			printf("Item kullanildi!");
+			printf("\nItem kullanildi!\n");
 		}
 		
 

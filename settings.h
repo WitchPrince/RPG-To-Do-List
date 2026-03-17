@@ -1,7 +1,10 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <stdio.h>
+#include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 //=================================================
 //some syntax templates for remembering file syntax
@@ -46,9 +49,10 @@
 #define TEMPU "database/users/temp.txt"
 #define TASKS "database/tasks.txt"
 #define FINISHED "database/finished-tasks.txt"
-#define INVENTORY "database/%s-inventory.txt"
+#define INVENTORY "database/users/%s-inventory.txt"
 #define USERLIST "database/users/userList.txt"
-#define ALIAS "database/alias.txt"
+#define ALIAS "database/do-not-change-these/alias.txt"
+#define AUTO "database/do-not-change-these/auto-login.txt"
 
 //structlar
 struct Market {

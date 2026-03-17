@@ -1,0 +1,67 @@
+.TH RPG 1 "March 2026" "rpg 1.0" "User Commands"
+.SH NAME
+rpg \- Terminal-based RPG to-do list and task management system
+.SH SYNOPSIS
+.B rpg
+[\fIOPTION\fR] [\fIARGUMENTS...\fR]
+.SH DESCRIPTION
+.B RPG To-Do List
+is a productivity tool that gamifies your daily task management. By completing tasks, you earn Experience Points and in-game currency. When executed without any arguments, it launches the interactive menu.
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+Display this help and exit.
+.TP
+.BR \-ta ", " \-\-task\-add " \fI""TASK_NAME"" HARDNESS AUTO_CALC\fR"
+Add a new task to the system. If the task name contains spaces, it must be enclosed in double quotes.
+.br
+\fIHARDNESS\fR: An integer between 1 and 5.
+.br
+\fIAUTO_CALC\fR: 1 to let the system calculate rewards based on hardness, 0 for manual assignment.
+.TP
+.BR \-c ", " \-\-complete " \fI""TASK_NAME""\fR"
+Successfully complete the specified task. The system will reward the user's profile with EXP and Gold based on the task's difficulty, and the task will be archived.
+.TP
+.BR \-ctp ", " \-\-change\-task\-parameters " \fI""TASK_NAME"" PARAM_ID ""NEW_VALUE""\fR"
+Update the parameters of an existing task.
+.br
+\fIPARAM_ID Values\fR:
+.br
+  1: Task Name
+.br
+  2: Hardness Level
+.br
+  3: Reward (Gold)
+.br
+  4: Experience Points (EXP)
+.br
+  5: Task Details
+.TP
+.BR \-sf ", " \-\-show\-finished
+List the history of all completed and archived tasks.
+.TP
+.BR \-dt ", " \-\-delete\-task " \fI""TASK_NAME""\fR"
+Permanently delete the specified task from the system without granting any rewards or EXP.
+.TP
+.BR \-qa ", " \-\-quit\-account
+Log out of the current session. If auto-login is active, this will disable it and return to the authentication screen.
+.SH EXAMPLES
+Add a new task with a hardness of 4 and auto-calculated rewards:
+.PP
+.RS
+$ rpg -ta "task_name" 4 1
+.RE
+.PP
+Claim the reward for a completed task:
+.PP
+.RS
+$ rpg -c "task_name"
+.RE
+.PP
+Change the hardness level (Parameter 2) of an existing task to 5:
+.PP
+.RS
+$ rpg -ctp "task_name" 2 "5"
+.RE
+.SH AUTHOR
+Written by the RPG To-Do List Developer.

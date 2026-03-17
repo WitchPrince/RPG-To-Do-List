@@ -43,7 +43,11 @@ install: all
 	@echo 'cd "$(CURDIR)" && ./$(TARGET) "$$@"' >> rpg_launcher
 	@chmod +x rpg_launcher
 	@sudo mv rpg_launcher /usr/local/bin/$(TARGET)
-	@echo Kurulum basarili! 'rpg' yazarak baslatabilirsin.
+	@sudo mkdir -p /usr/local/share/man/man1
+	@sudo cp rpg.1 /usr/local/share/man/man1/
+	@sudo gzip -f /usr/local/share/man/man1/rpg.1
+	@sudo mandb -q
+	@echo Kurulum basarili! 'rpg' yazarak baslatabilir, 'man rpg' ile kılavuza ulasabilirsin!
 
 uninstall:
 	@sudo rm -f /usr/local/bin/$(TARGET)

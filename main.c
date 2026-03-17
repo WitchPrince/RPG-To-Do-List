@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
 	int decision = 1, number, check = 0; 
 	char filePathP[100], filePathI[100], tempUser[MAX_USER_NAME];
 
-	FILE *log = fopen("database/auto-login.txt", "r");
+	FILE *log = fopen(AUTO, "r");
 	FILE *nameList = fopen(USERLIST, "r");
 
 	if(log != NULL){	
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
 
 	else if(argc >= 2){
 		FILE *taskAlias = fopen(ALIAS, "r");
-		char alias[20];
+		char alias[50];
 		bool check = 1;
 		
 		while(fscanf(taskAlias, "%[^\n]\n", alias) != EOF){
@@ -81,6 +81,7 @@ int main(int argc, char *argv[]){
 				break;
 			}
 		}
+		fclose(taskAlias);
 
 		if(check){
 			printf("Hatali arguman girdiniz. Daha fazla bilgi icin 'rpg --help' deneyin!");
@@ -88,7 +89,16 @@ int main(int argc, char *argv[]){
 		}
 
 		if(strcmp(argv[1], "--help") == 0 || strcmp (argv[1], "-h") == 0){
-
+			if(argc > 2){
+				printf("Hata! Fazla parametre girdiniz!");
+				return 0;
+			}
+			int status = system("man rpg");
+			
+			if (status != 0) {
+				printf("Kılavuz dosyasi acilamadi. Lutfen 'make install' ile kurulum yaptiginizdan emin olun.\n");
+			}
+			
 		}
 
 		else if(strcmp(argv[1], "--task-add") == 0 || strcmp(argv[1], "-ta") == 0){
@@ -139,7 +149,8 @@ int main(int argc, char *argv[]){
 		}
 
 		else if(strcmp(argv[1], "--quit-account") == 0 || strcmp(argv[1], "-qa") == 0){
-
+			remove(AUTO);
+			printf("Cikis yapildi!");
 		}
 
 		return 0;
