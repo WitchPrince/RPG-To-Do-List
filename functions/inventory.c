@@ -50,16 +50,16 @@ void inventory(char filePathI[100]){
 		}
 	}	
 
-		if(check == 0){
-			printf("\nGirdiginiz item envanterinizde bulunamadi!\n");
+		if(check){
+			printf("\nItem kullanildi!\n");
 		}
 		else{
-			printf("\nItem kullanildi!\n");
+			printf("\nGirdiginiz item envanterinizde bulunamadi!\n");
 		}
 		
 
 	fclose(fptr); fclose(temp);
-	if(isExist == 1){
+	if(isExist){
 			remove(filePathI);
 			rename(TEMP, filePathI);
 	}

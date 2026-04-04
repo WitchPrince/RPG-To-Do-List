@@ -1,7 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "settings.h"
+#include "plugin.h"
 
 int main(int argc, char *argv[]){
 	
@@ -88,7 +86,7 @@ int main(int argc, char *argv[]){
 			return 0;
 		}
 
-		if(strcmp(argv[1], "--help") == 0 || strcmp (argv[1], "-h") == 0){
+		if(strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0){
 			if(argc > 2){
 				printf("Hata! Fazla parametre girdiniz!");
 				return 0;
@@ -151,6 +149,14 @@ int main(int argc, char *argv[]){
 		else if(strcmp(argv[1], "--quit-account") == 0 || strcmp(argv[1], "-qa") == 0){
 			remove(AUTO);
 			printf("Cikis yapildi!");
+		}
+
+		else if(strcmp(argv[1], "--enable-plugin") == 0 || strcmp(argv[1], "-ep") == 0){
+
+		}
+
+		else if(strcmp(argv[1], "--disable-plugin") == 0 || strcmp(argv[1], "-dp") == 0){
+
 		}
 
 		return 0;

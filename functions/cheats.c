@@ -51,7 +51,7 @@ void cheats(char userName[MAX_USER_NAME]){
 		temp = fopen(TEMP, "w");
 		profile = fopen(filePathP, "r");
 	
-		fscanf(profile, "User: %[^,], Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", userName, &hashInFile, &p1.currency, &p1.exp, &p1.level, p1.expBar);
+		fscanf(profile, "User: %[^,], Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %[^\n]\n", userName, &hashInFile, &p1.currency, &p1.exp, &p1.level, p1.expBar);
 	
 		fprintf(temp, "User: %s, Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n", userName, hashInFile, balance, p1.exp, p1.level, p1.expBar);
 

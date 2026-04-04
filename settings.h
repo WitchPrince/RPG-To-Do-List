@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <dlfcn.h>
 
 //=================================================
 //some syntax templates for remembering file syntax
