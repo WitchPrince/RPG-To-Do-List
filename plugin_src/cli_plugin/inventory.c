@@ -1,4 +1,4 @@
-#include "../settings.h"
+#include "../../settings.h"
 
 void inventory(char filePathI[100]){
 	FILE *fptr;

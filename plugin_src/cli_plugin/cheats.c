@@ -1,4 +1,4 @@
-#include "../settings.h"
+#include "../../settings.h"
 
 void cheats(char userName[MAX_USER_NAME]){
 	struct Item i1;

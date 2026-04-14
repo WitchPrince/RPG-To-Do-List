@@ -1,4 +1,4 @@
-#include "../settings.h"
+#include "../../settings.h"
 
 unsigned long hashPassword(char *str) {
     unsigned long hash = 5381;

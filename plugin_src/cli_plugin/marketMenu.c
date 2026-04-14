@@ -1,4 +1,4 @@
-#include "../settings.h"
+#include "../../settings.h"
 
 void marketMenu(char filePathP[100], char filePathI[100]){
 		FILE *fptr;

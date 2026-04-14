@@ -54,6 +54,9 @@
 #define USERLIST "database/users/userList.txt"
 #define ALIAS "database/do-not-change-these/alias.txt"
 #define AUTO "database/do-not-change-these/auto-login.txt"
+#define ACTIVE_PLUGINS "database/do-not-change-these/plugins/active_modules.txt"
+#define TEMP_PLUGINS "database/do-not-change-these/plugins/temp.txt"
+#define AVAILABLE_PLUGINS "database/do-not-change-these/plugins/available_plugins.txt"
 
 //structlar
 struct Market {

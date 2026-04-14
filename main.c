@@ -2,164 +2,108 @@
 #include "plugin.h"
 
 int main(int argc, char *argv[]){
-	
-	struct Profile p1;
-	int decision = 1, number, check = 0; 
-	char filePathP[100], filePathI[100], tempUser[MAX_USER_NAME];
+	void *handle = NULL;
 
-	FILE *log = fopen(AUTO, "r");
-	FILE *nameList = fopen(USERLIST, "r");
-
-	if(log != NULL){	
-		fscanf(log, "%d\n", &check);
-		fscanf(log, "%s", p1.user);
- 		fclose(log);
-	
-		while(fscanf(nameList, "(%d) User: %s", &p1.number, tempUser) != EOF){
-			if(strcmp(p1.user, tempUser) == 0){
-				number = p1.number;
-				fclose(nameList);
-				break;
-			}
-		}
-	}
-
-	if(check == 0){    
-		number = userMenu();
-		if(number == 0){
-			printf("Sifre yanlis!");
+	if(argc >= 2){
+		if(strcmp(argv[1], "--enable-plugin") == 0 || strcmp(argv[1], "-ep") == 0){
+		if(argc < 3){
+			printf("\nHata! Aktif edilecek eklentinin ismini girmediniz!\nKullanim: rpg -ep <plugin_file.so>\n");
 			return 0;
 		}
-		
-		nameList = fopen(USERLIST, "r");
-		while(fscanf(nameList, "(%d) User: %s", &p1.number, p1.user) != EOF){
-			if(number == p1.number) break;
+
+		FILE *modFile = fopen(ACTIVE_PLUGINS, "r");
+		char pluginName[100];
+		if(modFile != NULL){
+			while(fscanf(modFile, "%s\n", pluginName) != EOF){
+				if(strcmp(pluginName, argv[2]) == 0){
+					printf("Hata! Bu eklenti zaten aktif!");
+					fclose(modFile);
+					return 0;
+				}
+			}
+			fclose(modFile);
 		}
-		fclose(nameList);
-	
-		autoLogin(p1.user);
+
+		else{
+			printf("Aktif pluginler dosyasi bulunamadi!");
+			return 0;
+		}
+		modFile = fopen(AVAILABLE_PLUGINS, "r");
+
+		if(modFile != NULL){
+			while(fscanf(modFile, "%s\n", pluginName) != EOF){ 
+				if(strcmp(pluginName, argv[2]) == 0){
+					printf("\nEklenti bulundu! Aktif ediliyor...\n\n");
+					FILE *addPlugin = fopen(ACTIVE_PLUGINS, "a");
+					fprintf(addPlugin, "%s\n", pluginName);
+					printf("\n%s eklentisi aktif edilmistir! Uygulamayi kapatip actiginizda uygulanacak!", pluginName);
+					fclose(addPlugin); fclose(modFile);
+					return 0;
+					}
+			}
+		}
+		fclose(modFile);
+		return 0;
 	}
 
-	sprintf(filePathP, USER_DIR, p1.user);
-	sprintf(filePathI, INVENTORY, p1.user);
+		else if(strcmp(argv[1], "--disable-plugin") == 0 || strcmp(argv[1], "-dp") == 0){
+			FILE *modFile = fopen(ACTIVE_PLUGINS, "r");
+			FILE *temp = fopen(TEMP_PLUGINS, "w");
+			char pluginName[100];
+			bool isItActive = 0;
 
+			if(modFile != NULL && temp != NULL){
+				while(fscanf(modFile, "%s\n", pluginName) != EOF){
+					if(strcmp(pluginName, argv[2]) == 0){
+						isItActive = 1;
+					}
+				}
+			}
+
+			else{
+				printf("Aktif pluginler dosyası bulunamadi!");
+				return 0;
+			}
+
+			if(isItActive){
+				rewind(modFile);
+				while(fscanf(modFile, "%s\n", pluginName) != EOF){
+					if(strcmp(pluginName, argv[2]) != 0){
+						fprintf(temp, "%s\n", pluginName);
+					}
+					else printf("%s eklentisi deaktive edildi!", pluginName);
+				}
+				fclose(modFile); fclose(temp);
+				remove(ACTIVE_PLUGINS);
+				rename(TEMP_PLUGINS, ACTIVE_PLUGINS);
+				return 0;
+			}
+
+			else printf("Hata! Girdiginiz eklenti zaten aktif degil!");
+			fclose(modFile); fclose(temp);
+		}
+	}
 
 	if(argc == 1){
-		printf("\nRPG To-Do List uygulamasina hosgeldiniz!");
-		while(decision != 0){
-	
-			printf("\nYapmak istediğiniz islemi numara ile seciniz.\n\n(1) Marketplace\n(2) Tasks\n(3) Inventory\n(4) Cheat Menu\n(5) Profile\n(6) Settings\n(7) Exit\nDecision: ");
-			scanf("%d", &decision);
-			printf("\n-------------------------------------------------------\n\n");
-
-			if(decision == 1) marketMenu(filePathP, filePathI);
-	
-			else if(decision == 2) taskMenu(filePathP, filePathI);
-
-			else if(decision == 3) inventory(filePathI);
-
-			else if(decision == 4) cheats(p1.user);
-
-			else if(decision == 5) profileMenu(number);
-			
-			else if(decision == 6) logOut();
-
-			else break;
-		}
+		handle = dlopen("database/do-not-change-these/plugins/ui_manager_plugin.so", RTLD_NOW);	
 	}
 
 	else if(argc >= 2){
-		FILE *taskAlias = fopen(ALIAS, "r");
-		char alias[50];
-		bool check = 1;
-		
-		while(fscanf(taskAlias, "%[^\n]\n", alias) != EOF){
-			if(strcmp(alias, argv[1]) == 0){
-				check = 0;
-				break;
-			}
+		handle = dlopen("database/do-not-change-these/plugins/fast_commands_plugin.so", RTLD_NOW);
+	}
+
+	if(handle){
+		get_plugin_info_func get_info = (get_plugin_info_func)dlsym(handle, "get_plugin_info");
+		if(get_info){
+			Plugin *p = get_info();
+			p->init();
+			p->run(argc, argv);
+			p->cleanup();
 		}
-		fclose(taskAlias);
-
-		if(check){
-			printf("Hatali arguman girdiniz. Daha fazla bilgi icin 'rpg --help' deneyin!");
-			return 0;
-		}
-
-		if(strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0){
-			if(argc > 2){
-				printf("Hata! Fazla parametre girdiniz!");
-				return 0;
-			}
-			int status = system("man rpg");
-			
-			if (status != 0) {
-				printf("Kılavuz dosyasi acilamadi. Lutfen 'make install' ile kurulum yaptiginizdan emin olun.\n");
-			}
-			
-		}
-
-		else if(strcmp(argv[1], "--task-add") == 0 || strcmp(argv[1], "-ta") == 0){
-			if(argc < 5) {
-				printf("Hata! Eksik parametre girdiniz!\nKullanim: rpg -ta \"Gorev Adi\" <zorluk derecesi (1-5)> <autoCalc(1/0)>\n");
-				return 0;
-			}	
-
-			char *taskName = argv[2];
-			int hardness = atoi(argv[3]);
-			int autoCalc = atoi(argv[4]);
-			char details[MAX_TASK_DETAILS] = "";
-
-			addTaskDirectly(taskName, hardness, autoCalc, 0, 0, details);
-		}
-
-		else if(strcmp(argv[1], "--complete") == 0 || strcmp(argv[1], "-c") == 0){
-			if(argc < 3){
-        			printf("Hata! Tamamlanacak gorevi girmediniz!\nKullanim: rpg -c \"Gorev Adi\"\n");
-        			return 0;
-    			}
-    			
-			completeTaskDirectly(argv[2], filePathP, filePathI);
-		}
-
-		else if(strcmp(argv[1], "--change-task-parameters") == 0 || strcmp(argv[1], "-ctp") == 0){
-			if(argc < 5){
-        			printf("Hata: Eksik parametre!\n");
-        			printf("Kullanim: rpg -ctp \"Gorev Adi\" <parametre_no> \"yeni_deger\"\n");
-        			printf("Parametre No: 1:Ad, 2:Zorluk, 3:Odul, 4:Exp, 5:Detay\n");
-        			return 0;
-    			}
-			
-			int paramType = atoi(argv[3]);
-    			changeTaskParamDirectly(argv[2], paramType, argv[4]);
-		}
-
-		else if(strcmp(argv[1], "--show-finished") == 0 || strcmp(argv[1], "-sf") == 0){
-			showFinishedTasks();
-		}
-
-		else if(strcmp(argv[1], "--delete-task") == 0 || strcmp(argv[1], "-dt") == 0){
-			if(argc < 3){
-        			printf("Hata: Silinecek gorevi girmediniz!\nKullanim: rpg -dt \"Gorev Adi\"\n");
-        			return 0;
-    			}
-			deleteTaskDirectly(argv[2]);
-		}
-
-		else if(strcmp(argv[1], "--quit-account") == 0 || strcmp(argv[1], "-qa") == 0){
-			remove(AUTO);
-			printf("Cikis yapildi!");
-		}
-
-		else if(strcmp(argv[1], "--enable-plugin") == 0 || strcmp(argv[1], "-ep") == 0){
-
-		}
-
-		else if(strcmp(argv[1], "--disable-plugin") == 0 || strcmp(argv[1], "-dp") == 0){
-
-		}
-
-		return 0;
+		dlclose(handle);
+	}
+	else{
+		printf("Motor hatasi! Eklenti yuklenemedi: %s\n\n", dlerror());
 	}
 
 	return 0;

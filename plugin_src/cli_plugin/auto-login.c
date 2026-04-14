@@ -1,4 +1,4 @@
-#include "../settings.h"
+#include "../../settings.h"
 
 void autoLogin(char user[MAX_USER_NAME]){
 	int login;

@@ -1,7 +1,14 @@
 CC = gcc
 CFLAGS = -std=c99 -Wall
+LDFLAGS = -ldl
 
-SRCS = main.c functions/taskMenu.c functions/marketMenu.c functions/inventory.c functions/cheats.c functions/profile.c functions/userMenu.c functions/auto-login.c
+CORE_SRCS = main.c
+
+PLUGIN_SRC_DIR = plugin_src
+PLUGIN_OUT_DIR = database/do-not-change-these/plugins
+
+PLUGIN_DIRS = $(wildcard $(PLUGIN_SRC_DIR)/*)
+PLUGIN_SOS = $(patsubst $(PLUGIN_SRC_DIR)/%, $(PLUGIN_OUT_DIR)/%.so, $(PLUGIN_DIRS))
 
 ifeq ($(OS),Windows_NT)
 	TARGET = rpg.exe
@@ -15,13 +22,24 @@ endif
 
 .PHONY: all clean install uninstall directories
 
-all: directories $(TARGET)
+all:	directories	$(TARGET) plugins	update-plugins
 
 directories:
 	@$(MKDIR_CMD)
+	@mkdir -p $(PLUGIN_OUT_DIR)
 
-$(TARGET): $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) -o $(TARGET)
+$(TARGET): $(CORE_SRCS)
+	$(CC) $(CFLAGS) $(CORE_SRCS) -o $(TARGET) $(LDFLAGS)
+
+$(PLUGIN_OUT_DIR)/%.so: $(PLUGIN_SRC_DIR)/%
+	@echo "Eklenti paketi derleniyor: $(@F)"
+	@$(CC) $(CFLAGS) -shared -fPIC $</*.c -o $@ $(shell cat $</flags.txt 2>/dev/null || echo "")
+
+plugins: $(PLUGIN_SOS)
+
+update-plugins:
+	@echo "Kullanilabilir eklenti listesi güncelleniyor..."
+	@ls -1 $(PLUGIN_OUT_DIR)/*.so > database/do-not-change-these/plugins/available_plugins.txt 2>/dev/null || true
 
 ifeq ($(OS),Windows_NT)
 install: all
@@ -56,4 +74,5 @@ endif
 
 clean:
 	@$(RM_CMD)
+	@rm -f $(PLUGIN_OUT_DIR)/*.so
 	@echo Temizlik tamamlandi.
