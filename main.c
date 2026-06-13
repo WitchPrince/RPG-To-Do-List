@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
 		modFile = fopen(AVAILABLE_PLUGINS, "r");
 
 		if(modFile != NULL){
-			while(fscanf(modFile, "%s\n", pluginName) != EOF){ 
+			while(fscanf(modFile, "database/do-not-change-these/plugins/%s\n", pluginName) != EOF){ 
 				if(strcmp(pluginName, argv[2]) == 0){
 					printf("\nEklenti bulundu! Aktif ediliyor...\n\n");
 					FILE *addPlugin = fopen(ACTIVE_PLUGINS, "a");

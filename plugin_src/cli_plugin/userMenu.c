@@ -47,6 +47,7 @@ int userMenu(){
 
 					else{
 						printf("\nSifre yanlis! Tekrar deneyin!\n");
+						fclose(nameList); fclose(profile);
 						return 0;
 					}
 				}
@@ -87,7 +88,7 @@ int userMenu(){
 		nameList = fopen(USERLIST, "a+");
 		char user[MAX_USER_NAME];
 
-		printf("\nRPG To-Do uygulamasına hoşgeldiniz!\nKayıt olmak istediğiniz,\nKullanici adi: ");
+		printf("\nRPG To-Do List uygulamasına hoşgeldiniz!\nKayıt olmak istediğiniz,\nKullanici adi: ");
 		scanf("%s", userName);
 		printf("Sifre: ");
 		scanf("%s", p1.passwd);
