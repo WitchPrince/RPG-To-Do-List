@@ -8,6 +8,7 @@ static int init(){
 
 static int run(int argc, char *argv[]){
 	userMenuTui(5, 30);
+	endwin();
 	return 0;
 }
 
@@ -45,22 +46,27 @@ int userMenuTui(int height, int width){
 	int highlight = 1, choice = 0;
 	int x, y;
 	int c;
+	int width, height;
 	
-	char info[] = "Use up and down arrow key to move and return to choose";
-
-	width = 30, height = 8;
 
 	initscr();
 	curs_set(0);
 	cbreak();
 	noecho();
 
-	y = (getmaxy(stdscr) - height) / 2;
-	x = (getmaxx(stdscr) - width) / 2;
+	y = Y_MEDIUM(stdscr);
+	x = X_MEDIUM(stdscr);
+
+	MENU_H;
+	MENU_W;
 
 	user_menu = create_newwin(height, width, y, x);
 	keypad(user_menu, TRUE);
 
+	x = X_MEDIUM_SEQ(user_menu, info);
+	y = Y_MEDIUM(user_menu);
+
+	char info[] = "Use up and down arrow key to move and return to choose";
 	mvwprintw(stdscr, LINES - 5, x, "%s", info);
 	refresh();
 		
@@ -102,13 +108,21 @@ int userMenuTui(int height, int width){
 		nameList = fopen(USERLIST, "r");
 		
 		if(nameList != NULL){
+			MENU_H;
+			MENU_W;
 			login_menu = create_newwin(height, width, y, x);
 
-			mvwprintw(login_menu, y + 1, x + 1, "User: ");
-			mvwprintw(login_menu, y + 3, x + 1, "Password: ");
+			char *un = "User: ";
+			x = X_MEDIUM_SEQ(login_menu, un);
+			mvwprintw(login_menu, y + 1, x, un);
 
-			mvwscanw(login_menu, y + 1, x + 1, "User: %s", p1.user);
-			mvwscanw(login_menu, y + 3, x + 1, "Password: %s", p1.passwd);
+			char *p = "Password: ";
+			x = X_MEDIUM_SEQ(login_menu, un);
+			mvwprintw(login_menu, y + 3, x, p);
+			refresh();
+
+			mvwscanw(login_menu, y + 1, X_MEDIUM_SEQ(login_menu, un), "User: %s", p1.user);
+			mvwscanw(login_menu, y + 3, X_MEDIUM_SEQ(login_menu, p), "Password: %s", p1.passwd);
 			hash = hashPassword(p1.passwd);
 			
 			while(fscanf(nameList, "(%d) User: %[^\n]\n", &userNumber, userName) != EOF){
@@ -122,7 +136,9 @@ int userMenuTui(int height, int width){
 
 					if(hash == hashInFile){
 						destroy_win(login_menu);
-						
+					
+						x = X_MEDIUM(stdscr);	
+						y = Y_MEDIUM(stdscr);
 						mvwprintw(stdscr, y, x, "Login succeed! Welcome %s!", userName);
 						refresh();
 						
@@ -136,8 +152,10 @@ int userMenuTui(int height, int width){
 
 					else{
 						destroy_win(login_menu);
+						char *warning = "Password isn't correct! Try again!";
 						
-						mvwprintw(stdscr, y, x, "Password isn't correct! Try again!");			mvwprintw(stdscr, LINES, 0, "Press anything to exit!");
+						mvwprintw(stdscr, Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, warning), warning);			
+						mvwprintw(stdscr, LINES - 1, X_MEDIUM(stdscr), "Press anything to exit!");
 						getch();
 						refresh();
 						endwin();
@@ -149,9 +167,10 @@ int userMenuTui(int height, int width){
 
 				if(check){
 					destroy_win(login_menu);
-						
-					mvwprintw(stdscr, y, x, "Username isn't exist! Please create a new one.");
-					mvwprintw(stdscr, LINES, 0, "Press anything to exit!");
+
+					char *warning = "Username isn't exist! Please create a new one.";
+					
+					mvwprintw(stdscr, Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, warning), warning);
 					getch();
 					refresh();
 					endwin();
@@ -163,8 +182,12 @@ int userMenuTui(int height, int width){
 		}
 
 		else{
-			mvwprintw(stdscr, y, x, "User list is empty! Please create a user first.");
-			mvwprintw(stdscr, LINES, 0, "Press anything to exit!");
+			char *warning = "User list is empty! Please create a user first.";
+			X_MEDIUM_SEQ(stdscr, warning);
+			Y_MEDIUM(stdscr);
+
+			mvwprintw(stdscr, y, x, warning);
+			mvwprintw(stdscr, LINES - 1, , "Press anything to exit!");
 			refresh();
 			endwin();
 			return 0;	
@@ -175,13 +198,27 @@ int userMenuTui(int height, int width){
 		nameList = fopen(USERLIST, "a+");
 
 		if(nameList != NULL){
+			destroy_win(user_menu);
+
+			MENU_H;
+			MENU_W;
+
+			x = (getmaxx(stdscr) - width) / 2;
+			y = Y_MEDIUM(stdscr);
+
 			sign_up_menu = create_newwin(height, width, y, x);
-			mvwprintw(sign_up_menu, y, x, "Welcome to RPG To-Do List app!");
-			mvwprintw(sign_up_menu, y + 2, x, "Username: ");
-			mvwprintw(sign_up_menu, y + 3, x, "Password: ");
+
+			/* idk if this is the most efficient way to center sentences. 
+			 * please let me know if there's another way. This macro is also so tiring tbh */
+			char *welcome = "Welcome to RPG To-Do List app!";
+			mvwprintw(sign_up_menu, 0, X_M(sign_up_menu, welcome), welcome);
+			char *un = "Username: ";
+			mvwprintw(sign_up_menu, y + 2, X_M(sign_up_menu, un), un);
+			char *p = "Password: ";
+			mvwprintw(sign_up_menu, y + 3, X_M(sign_up_menu, p), p);
 	
-			mvwscanw(sign_up_menu, y + 2, x, "Username: %s", p1.user);
-			mvwscanw(sign_up_menu, y + 3, x, "Password: %s", p1.passwd);
+			mvwscanw(sign_up_menu, y + 2, X_M(sign_up_menu, un), "Username: %s", p1.user);
+			mvwscanw(sign_up_menu, y + 3, X_M(sign_up_menu, p), "Password: %s", p1.passwd);
 			hash = hashPassword(p1.passwd);
 			sprintf(filePath, USER_DIR, p1.user);
 
