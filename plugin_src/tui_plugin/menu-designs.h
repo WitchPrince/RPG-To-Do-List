@@ -2,8 +2,10 @@
 #include "../../plugin.h"
 #include <ncurses.h>
 
+//Variables
 int n_choices;
 char **choices;
+
 
 //Function headers
 void print_menu(WINDOW *menu_win, int highlight);
@@ -19,6 +21,8 @@ WINDOW *marketMenuTui(int height, int width);
 WINDOW *profileTui(int height, int width);
 WINDOW *cheatMenuTui(int height, int width);
 WINDOW *settingsTui(int height, int width);
+
+unsigned long hashPassword(char *str);
 
 
 //Menu lists
@@ -39,21 +43,23 @@ void load_menu(char **menu){
 }
 
 void print_menu(WINDOW *menu_win, int highlight){
-	int x, y;
-
-	x = 2;
-	y = 2;
-
 	box(menu_win, 0, 0);
+	int *x, y;
+	y = getmaxy(menu_win);
+	y = (y - n_choices) / 2;
+	int startx = getmaxx(menu_win);
 
 	for(int i = 0; i < n_choices; i++){
 		if(highlight == i + 1){
+			x[i] = (startx - sizeof(choices[i])) / 2;
 			wattron(menu_win, A_REVERSE);
-			mvwprintw(menu_win, y, x, "%s", choices[i]);	
+			mvwprintw(menu_win, y, x[i], "%s", choices[i]);	
+			wattroff(menu_win, A_REVERSE);
 		}
 
 		else{
-			mvwprintw(menu_win, y, x, "%s", choices[i]);
+			x[i] = (startx - sizeof(choices[i])) / 2;
+			mvwprintw(menu_win, y, x[i], "%s", choices[i]);
 		}
 		++y;
 	}
@@ -75,4 +81,12 @@ void destroy_win(WINDOW *local_win){
 	wborder(local_win, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
 	wrefresh(local_win);
 	delwin(local_win);
+}
+
+unsigned long hashPassword(char *str){
+	unsigned long hash = 5381;
+	int c;
+	while((c = *str++))
+		hash = ((hash << 5) + hash) + c;
+	return hash;
 }

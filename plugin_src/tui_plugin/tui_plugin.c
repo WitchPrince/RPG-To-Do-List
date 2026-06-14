@@ -46,10 +46,14 @@ int userMenuTui(int height, int width){
 	int x, y;
 	int c;
 	
-	width = 40, height = 4;
+	char info[] = "Use up and down arrow key to move and return to choose";
+
+	width = 30, height = 8;
 
 	initscr();
+	curs_set(0);
 	cbreak();
+	noecho();
 
 	y = (getmaxy(stdscr) - height) / 2;
 	x = (getmaxx(stdscr) - width) / 2;
@@ -57,7 +61,7 @@ int userMenuTui(int height, int width){
 	user_menu = create_newwin(height, width, y, x);
 	keypad(user_menu, TRUE);
 
-	mvwprintw(stdscr, LINES - 5, x, "Use up and down arrow key to move and return to choose");
+	mvwprintw(stdscr, LINES - 5, x, "%s", info);
 	refresh();
 		
 	print_menu(user_menu, highlight);
@@ -81,6 +85,7 @@ int userMenuTui(int height, int width){
 				break;
 
 			case KEY_F(1):
+				endwin();
 				exit(1);
 			
 			case 10:
@@ -135,6 +140,7 @@ int userMenuTui(int height, int width){
 						mvwprintw(stdscr, y, x, "Password isn't correct! Try again!");			mvwprintw(stdscr, LINES, 0, "Press anything to exit!");
 						getch();
 						refresh();
+						endwin();
 						
 						fclose(nameList); fclose(profile);
 						return 0;
@@ -143,10 +149,12 @@ int userMenuTui(int height, int width){
 
 				if(check){
 					destroy_win(login_menu);
-					
-					mvwprintw(stdscr, y, x, "Username isn't exist! Please create a new one.");			mvwprintw(stdscr, LINES, 0, "Press anything to exit!");
+						
+					mvwprintw(stdscr, y, x, "Username isn't exist! Please create a new one.");
+					mvwprintw(stdscr, LINES, 0, "Press anything to exit!");
 					getch();
 					refresh();
+					endwin();
 					
 					fclose(nameList);
 					return 0;
@@ -158,6 +166,7 @@ int userMenuTui(int height, int width){
 			mvwprintw(stdscr, y, x, "User list is empty! Please create a user first.");
 			mvwprintw(stdscr, LINES, 0, "Press anything to exit!");
 			refresh();
+			endwin();
 			return 0;	
 		}
 	}
@@ -199,5 +208,6 @@ int userMenuTui(int height, int width){
 			return 1;
 		}
 	}
+	endwin();
 	return 0;
 }
