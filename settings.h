@@ -1,11 +1,13 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
+#define _XOPEN_SOURCE_EXTENDED
 
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <dlfcn.h>
+#include <locale.h>
 
 //=================================================
 //some syntax templates for remembering file syntax

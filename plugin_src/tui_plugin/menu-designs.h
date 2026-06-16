@@ -3,26 +3,15 @@
 #include <ncurses.h>
 
 //Variables
-int n_choices;
+int n_choices, height, width;
 char **choices;
-#define SIGN_UP_H (getmaxy()) 
-#define SIGN_UP_W 30
-#define LOGIN_W 30
-#define LOGIN_H 10
 
 
 //Macros
 #define X_MEDIUM_SEQ(win, text) (getmaxx(win) - strlen(text)) / 2
-#define X_MEDIUM(win) getmaxx(win) / 2 		//This is a requirement while creating a window. I didn't want to calculate it everytime
-#define Y_MEDIUM(win) (getmaxy(win) - n_choices) / 2
-
-#define MENU_H height = n_choices + 4
-#define MENU_W int biggest = choices[0];\
-		      for(int i = 1; i < n_choices; i++){\
-				if(strlen(choices[i]) > biggest) biggest = strlen(choices[i])\
-		      }\
-		      width = biggest + 6
-			
+#define X_MEDIUM(win) (getmaxx(win) - width) / 2 		//This is a requirement while creating a window. I didn't want to calculate it everytime
+#define Y_MEDIUM(win) (getmaxy(win) - n_choices - height) / 2
+#define H_MEDIUM(win) getmaxy(win) / 2
 
 //Function headers
 void print_menu(WINDOW *menu_win, int highlight);
@@ -30,7 +19,10 @@ void load_menu(char **menu);
 void destroy_win(WINDOW *local_win);
 WINDOW *create_newwin(int height, int width, int starty, int startx);
 
-int userMenuTui(int height, int width);
+int get_menu_h(int padding);
+int get_menu_w(int padding);
+
+int userMenuTui();
 
 WINDOW *taskMenuTui(int height, int width);
 WINDOW *inventoryTui(int height, int width);
@@ -87,6 +79,7 @@ WINDOW *create_newwin(int height, int width, int starty, int startx){
 	WINDOW *local_win;
 
 	local_win = newwin(height, width, starty, startx);
+	
 	box(local_win, 0, 0);
 
 	wrefresh(local_win);
@@ -110,4 +103,23 @@ unsigned long hashPassword(char *str){
 	while((c = *str++))
 		hash = ((hash << 5) + hash) + c;
 	return hash;
+}
+
+int get_menu_h(int padding){
+	int height;
+	if(padding == 0) height = n_choices + 4;
+	else height = n_choices + padding;
+
+	return height;
+}
+
+int get_menu_w(int padding){
+	int biggest = strlen(choices[0]);
+	for(int i = 1; i < n_choices; i++){
+		if(strlen(choices[i]) > biggest) biggest = strlen(choices[i]);
+	}
+	if(padding == 0) width = biggest + 6;
+	else width = biggest + padding;
+
+	return width;
 }
