@@ -1,4 +1,5 @@
 #include "../../settings.h"
+#include "settingsFCP.h"
 
 void autoLogin(char user[MAX_USER_NAME]){
 	int login;

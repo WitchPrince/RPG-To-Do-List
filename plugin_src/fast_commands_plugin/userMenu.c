@@ -1,4 +1,5 @@
 #include "../../settings.h"
+#include "settingsFCP.h"
 
 unsigned long hashPassword(char *str) {
     unsigned long hash = 5381;

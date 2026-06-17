@@ -1,4 +1,5 @@
 #include "../../settings.h"
+#include "settingsFCP.h"
 
 void taskMenu(char filePathP[100], char filePathI[100]){
 		FILE *fptr = fopen(TASKS, "r");

@@ -1,6 +1,29 @@
 #include "../../settings.h"
+#include "settingsCli.h"
 
-void taskMenu(char filePathP[100], char filePathI[100]){
+void showFinishedTasks(){
+	FILE *finished = fopen(FINISHED, "r");
+
+	if(finished == NULL){
+		printf("Bitmis gorev yok!");
+	}
+			
+	else {
+		printf("\n-------------------------------------------------------\n");
+		char i;
+					
+		while(1){
+			i = fgetc(finished);
+			if(i == EOF) break;
+			else	printf("%c", i);
+		}
+				
+		printf("\n-------------------------------------------------------\n");
+		fclose(finished);
+	}
+}
+
+void taskMenu(char *filePathP, char *filePathI){
 		FILE *fptr = fopen(TASKS, "r");
 		FILE *temp;
 		FILE *inventory;
@@ -318,27 +341,6 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				
 }
 
-void showFinishedTasks(){
-	FILE *finished = fopen(FINISHED, "r");
-
-	if(finished == NULL){
-		printf("Bitmis gorev yok!");
-	}
-			
-	else {
-		printf("\n-------------------------------------------------------\n");
-		char i;
-					
-		while(1){
-			i = fgetc(finished);
-			if(i == EOF) break;
-			else	printf("%c", i);
-		}
-				
-		printf("\n-------------------------------------------------------\n");
-		fclose(finished);
-	}
-}
 
 void addTaskDirectly(char *taskName, int hardness, int autoCalc, int reward, int exp, char *details) {
 	FILE *fptr = fopen(TASKS, "a");

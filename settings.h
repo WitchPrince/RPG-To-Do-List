@@ -1,13 +1,11 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
-#define _XOPEN_SOURCE_EXTENDED
 
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <dlfcn.h>
-#include <locale.h>
 
 //=================================================
 //some syntax templates for remembering file syntax
@@ -41,7 +39,7 @@
 #define MAX_ITEM_NAME 25
 #define MAX_ITEM_DETAILS 200
 #define MAX_USER_NAME 30
-#define MAX_PASSWD 20
+#define MAX_PASSWD 30
 
 //Macrolar
 #define USER_DIR "database/users/%s.txt"
@@ -84,23 +82,5 @@ struct Profile{
 	char user[MAX_USER_NAME], passwd[MAX_PASSWD], expBar[13];
 	int currency, exp, level, number;
 };
-
-//fonksiyonlar
-void marketMenu(char filePathP[100], char filePathI[100]);
-void taskMenu(char filePathP[100], char filePathI[100]);
-void inventory(char filePathI[100]);
-void profileMenu(int userNumber);
-int userMenu();
-void cheats(char userName[MAX_USER_NAME]);
-unsigned long hashPassword(char *str);
-void autoLogin(char user[MAX_USER_NAME]);
-void logOut();
-
-//fast functions
-void showFinishedTasks();
-void addTaskDirectly(char *taskName, int hardness, int autoCalc, int reward, int exp, char *details);
-void completeTaskDirectly(char *taskName, char filePathP[100], char filePathI[100]);
-void deleteTaskDirectly(char *taskName);
-void changeTaskParamDirectly(char *taskName, int paramType, char *newValueStr);
 
 #endif

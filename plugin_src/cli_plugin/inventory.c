@@ -1,6 +1,7 @@
 #include "../../settings.h"
+#include "settingsCli.h"
 
-void inventory(char filePathI[100]){
+void inventory(char *filePathI){
 	FILE *fptr;
 	FILE *temp = fopen(TEMP, "w");
 	char itemSelect[MAX_ITEM_NAME];

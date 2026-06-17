@@ -1,6 +1,7 @@
 #include "../../settings.h"
+#include "settingsCli.h"
 
-void marketMenu(char filePathP[100], char filePathI[100]){
+void marketMenu(char *filePathP, char *filePathI){
 		FILE *fptr;
 		FILE *temp;
 		FILE *inventory;

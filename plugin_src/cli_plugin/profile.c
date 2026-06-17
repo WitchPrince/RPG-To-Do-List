@@ -1,18 +1,12 @@
 #include "../../settings.h"
+#include "settingsCli.h"
 
-void profileMenu(int userNumber){
-	FILE *nameList = fopen(USERLIST, "r");
+void profileMenu(char *filePathP){
 	FILE *profile;
 	struct Profile p1;
-	int userNo;
-	char filePath[100];
 	
-	while(fscanf(nameList, "(%d) User: %s", &userNo, p1.user) != EOF){
-		if(userNo == userNumber) break;
-	}
-	fclose(nameList);
-	sprintf(filePath, USER_DIR, p1.user);
-	profile = fopen(filePath, "r");
+	sprintf(filePathP, USER_DIR, p1.user);
+	profile = fopen(filePathP, "r");
 	
 	char i;
 	while(1){

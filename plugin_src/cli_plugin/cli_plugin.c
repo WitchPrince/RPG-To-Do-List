@@ -1,5 +1,6 @@
 #include "../../plugin.h"
 #include "../../settings.h"
+#include "settingsCli.h"
 
 static void *cli_handle = NULL;
 
@@ -67,7 +68,7 @@ static int run(int argc, char *argv[]){
 
 		else if(decision == 4) cheats(p1.user);
 
-		else if(decision == 5) profileMenu(number);
+		else if(decision == 5) profileMenu(filePathP);
 			
 		else if(decision == 6) logOut();
 

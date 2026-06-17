@@ -1,4 +1,5 @@
 #include "../../settings.h"
+#include "settingsFCP.h"
 
 void profileMenu(int userNumber){
 	FILE *nameList = fopen(USERLIST, "r");
