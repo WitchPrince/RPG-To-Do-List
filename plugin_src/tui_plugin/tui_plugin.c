@@ -3,7 +3,7 @@
 //Global Variables
 int n_choices, height, width, x, y;
 
-char **choices, filePathP[100], filePathI[100];
+char **choices, filePathP[100], filePathI[100], userName[MAX_USER_NAME];
 
 static void *tui_handle = NULL;
 
@@ -44,6 +44,7 @@ static int run(int argc, char *argv[]){
 	sprintf(filePathP, USER_DIR, p1.user);
 	sprintf(filePathI, INVENTORY, p1.user);
 
+	load_menu(menu_list_choices);
 	main_menu(filePathP, filePathI);
 
 	endwin();

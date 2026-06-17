@@ -30,11 +30,11 @@ int get_menu_h(int padding);
 int get_menu_w(int padding);
 
 int userMenuTui();
-void main_menu(char *filePathP, char *filePathI);
-void taskMenuTui(char *filePathP, char *filePathI);
-void inventoryMenuTui(char *filePathI);
-void marketMenuTui(char *filePathP, char *filePathI);
-void profileTui(char *filePathP);
+void main_menu();
+void taskMenuTui();
+void inventoryMenuTui();
+void marketMenuTui();
+void profileTui();
 void cheatMenuTui(char userName[MAX_USER_NAME]);
 void settingsTui();
 

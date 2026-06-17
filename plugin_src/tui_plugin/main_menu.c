@@ -1,6 +1,6 @@
 #include "menu-designs.h"
 
-void main_menu(char *filePathP, char *filePathI){
+void main_menu(){
 	WINDOW *main_menu;
 	int c, highlight = 1, choice = 0;
 
@@ -51,23 +51,24 @@ void main_menu(char *filePathP, char *filePathI){
 				choice = highlight;
 				break;
 		}
-
+		
 		print_menu(main_menu, highlight);
-		if(choice != 0) break;
-	}
-
-	while(1){
+		
 		switch(choice){
+
+			case 0: 
+				break;
+
 			case 1:
-				marketMenuTui(filePathP, filePathI);
+				marketMenuTui();
 				break;
 			
 			case 2:
-				taskMenuTui(filePathP, filePathI);
+				taskMenuTui();
 				break;
 
 			case 3:
-				inventoryMenuTui(filePathI);
+				inventoryMenuTui();
 				break;
 
 			case 4:
@@ -75,7 +76,7 @@ void main_menu(char *filePathP, char *filePathI){
 				break;
 
 			case 5:
-				profileTui(filePathP);
+				profileTui();
 				break;
 
 			case 6:
@@ -90,5 +91,6 @@ void main_menu(char *filePathP, char *filePathI){
 				endwin();
 				exit(1);
 		}
-	}	
+		choice = 0;
+	}
 }

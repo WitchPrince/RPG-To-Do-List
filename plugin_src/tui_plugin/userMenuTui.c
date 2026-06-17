@@ -14,7 +14,6 @@ int userMenuTui(){
 	struct Profile p1;
 	strcpy(p1.expBar, "[__________]");
 	unsigned long hash, hashInFile;
-	char userName[MAX_USER_NAME], filePath[100];
 	int userNumber = 0, check = 1;
 	int highlight = 1, choice = 0;
 	int c;
@@ -107,10 +106,10 @@ int userMenuTui(){
 			while(fscanf(nameList, "(%d) User: %[^\n]\n", &userNumber, userName) != EOF){
 				if(strcmp(userName, p1.user) == 0){
 					check = 0;
-					
-					sprintf(filePath, USER_DIR, userName);
 
-					profile = fopen(filePath, "r");
+					sprintf(filePathP, USER_DIR, userName);
+					
+					profile = fopen(filePathP, "r");
 					fscanf(profile, "User: %[^,], Password: %lu", userName, &hashInFile);
 
 					if(hash == hashInFile){
@@ -145,19 +144,20 @@ int userMenuTui(){
 					}
 				}
 
-				if(check){
-					destroy_win(login_menu);
 
-					char *warning = "Username isn't exist! Please create a new one.";
+			}
+			if(check){
+				destroy_win(login_menu);
+
+				char *warning = "Username isn't exist! Please create a new one.";
 					
-					mvwprintw(stdscr, Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);
-					getch();
-					refresh();
-					endwin();
+				mvwprintw(stdscr, Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);
+				getch();
+				refresh();
+				endwin();
 					
-					fclose(nameList);
-					return 0;
-				}
+				fclose(nameList);
+				return 0;
 			}
 		}
 
@@ -210,14 +210,15 @@ int userMenuTui(){
 			noecho();
 
 			hash = hashPassword(p1.passwd);
-			sprintf(filePath, USER_DIR, p1.user);
-
+			sprintf(filePathP, USER_DIR, p1.user);
+			strcpy(userName, p1.user);
+			
 			while(fscanf(nameList, "(%d) User: %s\n", &userNumber, userName) != EOF);
 				
 			rewind(nameList);
 			fprintf(nameList, "(%d) User: %s\n", userNumber + 1, p1.user);
 
-			profile = fopen(filePath, "w");
+			profile = fopen(filePathP, "w");
 			fprintf(profile, "User: %s, Password: %lu\n\nCurrency: 0\nExp: 0\nLevel: 0, Exp Bar ==> %s\n", p1.user, hash, p1.expBar);
 
 			fclose(profile); fclose(nameList);
@@ -228,7 +229,7 @@ int userMenuTui(){
 			nameList = fopen(USERLIST, "w");
 			fprintf(nameList, "(1) User: %s\n", p1.user);
 		
-			profile = fopen(filePath, "w");
+			profile = fopen(filePathP, "w");
 			fprintf(profile, "User: %s, Password: %lu\n\nCurrency: 0\nExp: 0\nLevel: 0, Exp Bar ==> %s\n", p1.user, hash, p1.expBar);
 			
 			fclose(nameList); fclose(profile);
