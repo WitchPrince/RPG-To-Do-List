@@ -1,8 +1,7 @@
-#include "menu-designs.h"
+#include "settingsTui.h"
 
 void taskMenuTui(){}
 void inventoryMenuTui(){}
-void marketMenuTui(){}
 void profileTui(){}
 void cheatMenuTui(char userName[MAX_USER_NAME]){}
 void settingsTui(){}
@@ -25,6 +24,17 @@ char *menu_list_choices[] = {
 				NULL,
 };
 
+char *market_menu_choices[] = {
+				"Buy",
+				"Add Product",
+				"Remove Product",
+				"Change Price",
+				"Exit",
+				NULL,
+};
+
+char *buy_menu_choices[100];
+
 //Some functions that I didn't want to add to the main file
 void load_menu(char **menu){
 	choices = menu;
@@ -38,6 +48,7 @@ void print_menu(WINDOW *menu_win, int highlight){
 	box(menu_win, 0, 0);
 	y = Y_MEDIUM_LIST(menu_win);
 
+	int page = n_choices ;
 	for(int i = 0; i < n_choices; i++){
 		if(highlight == i + 1){
 			x = X_MEDIUM_SEQ(menu_win, strlen(choices[i]));
@@ -103,3 +114,36 @@ int get_menu_w(int padding){
 	return width;
 }
 
+void choose_keys(WINDOW *menu){
+	keypad(menu, TRUE);
+	while(1){
+		c = wgetch(menu);
+		switch(c){
+			case KEY_UP:
+				if(highlight == 1) 
+					highlight = n_choices;
+				else 
+					--highlight;
+				break;
+
+			case KEY_DOWN:
+				if(highlight == n_choices) 
+					highlight = 1;
+				else 
+					++highlight;
+				break;
+
+			case KEY_F(1):	
+				destroy_win(menu);
+				endwin();
+				exit(1);
+
+			case 10:
+				choice = highlight;
+				highlight = 0;
+				break;
+		}
+		print_menu(menu, highlight);
+		if(choice != 0) break;
+	}
+}

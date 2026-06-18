@@ -1,4 +1,4 @@
-#include "menu-designs.h"
+#include "settingsTui.h"
 
 int userMenuTui(){
 
@@ -16,7 +16,6 @@ int userMenuTui(){
 	unsigned long hash, hashInFile;
 	int userNumber = 0, check = 1;
 	int highlight = 1, choice = 0;
-	int c;
 	
 	curs_set(0);
 	cbreak();
@@ -40,61 +39,29 @@ int userMenuTui(){
 		
 	print_menu(user_menu, highlight);
 
-	while(1){
-		c = wgetch(user_menu);
-
-		switch(c){
-			case KEY_UP:
-				if(highlight == 1)
-					highlight = n_choices;
-				else
-					--highlight;
-				break;
-
-			case KEY_DOWN:
-				if(highlight == n_choices)
-					highlight = 1;
-				else
-					++highlight;
-				break;
-
-			case KEY_F(1):
-				endwin();
-				exit(1);
-			
-			case 10:
-				choice = highlight;
-				break;
-		}
-
-		print_menu(user_menu, highlight);
-		if(choice != 0) break;
-	}
+	choose_keys(user_menu);
 
 	if(choice == 1){
 		destroy_win(user_menu); 
+		
+		height = get_menu_h(20);
+		width = get_menu_w(60);
+		login_menu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
+
 		nameList = fopen(USERLIST, "r");
 		
 		if(nameList != NULL){
-			height = get_menu_h(20);
-			width = get_menu_w(60);
-			y = Y_MEDIUM(stdscr);
-			x = X_MEDIUM(stdscr);
-			login_menu = create_newwin(height, width, y, x);
-
+			
 			curs_set(1);
 			echo();
-
 			char *un = "Username: ";
-			x = X_MEDIUM_SEQ(login_menu, (strlen(un) + MAX_USER_NAME));
-			y = H_MEDIUM(login_menu);
-			mvwprintw(login_menu, y - 1, x, un);
+			mvwprintw(login_menu, H_MEDIUM(login_menu) - 1, X_MEDIUM_SEQ(login_menu, (strlen(un) + MAX_USER_NAME)), un);
 			wrefresh(login_menu);
 			wgetnstr(login_menu, p1.user, MAX_USER_NAME);
 
 			char *p = "Password: ";
 			x = X_MEDIUM_SEQ(login_menu, (strlen(p) + MAX_PASSWD));
-			mvwprintw(login_menu, y + 1, x, p);
+			mvwprintw(login_menu, H_MEDIUM(login_menu) + 1, x, p);
 			wrefresh(login_menu);
 			wgetnstr(login_menu, p1.passwd, MAX_PASSWD);
 
@@ -114,16 +81,11 @@ int userMenuTui(){
 
 					if(hash == hashInFile){
 						destroy_win(login_menu);
-						char *enter_success = "Login succeed! Welcome %s!";	
-						x = X_MEDIUM_SEQ(stdscr, strlen(enter_success));	
-						y = Y_MEDIUM(stdscr);
-						mvwprintw(stdscr, y, x, enter_success, userName);
+						char *enter_success = "Login succeed! Welcome!";	
+						mvwprintw(stdscr, Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(enter_success)), enter_success);
 						refresh();
 						
-						timeout(3000);
 						getch();
-						timeout(-1);
-
 						fclose(nameList); fclose(profile);
 						return userNumber;
 					}
@@ -133,8 +95,8 @@ int userMenuTui(){
 						char *warning = "Password isn't correct! Try again!";
 						char *exit = "Press anything to exit!";
 						
-						mvwprintw(stdscr, Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);			
-						mvwprintw(stdscr, LINES - 1, X_MEDIUM_SEQ(stdscr, strlen(exit)), exit);
+						mvwprintw(stdscr, H_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);			
+						mvwprintw(stdscr, LINES - 3, X_MEDIUM_SEQ(stdscr, strlen(exit)), exit);
 						getch();
 						refresh();
 						endwin();
@@ -148,7 +110,6 @@ int userMenuTui(){
 			}
 			if(check){
 				destroy_win(login_menu);
-
 				char *warning = "Username isn't exist! Please create a new one.";
 					
 				mvwprintw(stdscr, Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);
@@ -162,13 +123,14 @@ int userMenuTui(){
 		}
 
 		else{
+			destroy_win(login_menu);
 			char *warning = "User list is empty! Please create a user first.";
-			x = X_MEDIUM_SEQ(stdscr, strlen(warning));
-			y = Y_MEDIUM(stdscr);
+			char *exit_ch = "Press anything to exit!";
 
-			mvwprintw(stdscr, y, x, warning);
-			mvwprintw(stdscr, LINES - 1, x, "Press anything to exit!");
+			mvwprintw(stdscr, H_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);
+			mvwprintw(stdscr, LINES - 3, X_MEDIUM_SEQ(stdscr, strlen(exit_ch)), exit_ch);
 			refresh();
+			getch();
 			endwin();
 			return 0;	
 		}
@@ -183,10 +145,7 @@ int userMenuTui(){
 			height = get_menu_h(20);
 			width = get_menu_w(60);
 
-			x = X_MEDIUM(stdscr);
-			y = Y_MEDIUM(stdscr);
-
-			sign_up_menu = create_newwin(height, width, y, x);
+			sign_up_menu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
 
 			y = H_MEDIUM(sign_up_menu);
 			/* idk if this is the most efficient way to center sentences. 
@@ -201,19 +160,30 @@ int userMenuTui(){
 			wrefresh(sign_up_menu);
 			wgetnstr(sign_up_menu, p1.user, MAX_USER_NAME);
 
+			while(fscanf(nameList, "(%d) User: %s\n", &userNumber, userName) != EOF){
+				if(strcmp(userName, p1.user) == 0){
+					destroy_win(sign_up_menu);
+					char *warning = "A user has already using that name! Pick up another one.";
+					mvwprintw(stdscr, H_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);
+					fclose(nameList);
+					return 0;
+				}
+			}
+
 			char *p = "Password: ";
 			mvwprintw(sign_up_menu, y + 1, X_MEDIUM_SEQ(sign_up_menu, (strlen(p) + MAX_PASSWD)), p);
 			wrefresh(sign_up_menu);
 			wgetnstr(sign_up_menu, p1.passwd, MAX_PASSWD);
+			destroy_win(sign_up_menu);
 
 			curs_set(0);
 			noecho();
 
 			hash = hashPassword(p1.passwd);
 			sprintf(filePathP, USER_DIR, p1.user);
-			strcpy(userName, p1.user);
-			
-			while(fscanf(nameList, "(%d) User: %s\n", &userNumber, userName) != EOF);
+		
+			char tempName[MAX_USER_NAME];	
+			while(fscanf(nameList, "(%d) User: %s\n", &userNumber, tempName) != EOF);
 				
 			rewind(nameList);
 			fprintf(nameList, "(%d) User: %s\n", userNumber + 1, p1.user);

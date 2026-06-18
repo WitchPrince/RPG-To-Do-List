@@ -34,7 +34,7 @@ $(TARGET): $(CORE_SRCS)
 
 $(PLUGIN_OUT_DIR)/%.so: $(PLUGIN_SRC_DIR)/%
 	@echo "Eklenti paketi derleniyor: $(@F)"
-	@$(CC) $(CFLAGS) -shared -fPIC $</*.c -o $@ $(shell cat $</flags.txt 2>/dev/null || echo "")
+	@$(CC) $(CFLAGS) -shared -fPIC $(wildcard $</*.c	$</*/*.c	$</*/*/*.c	$</*/*/*/*.c) -o $@ $(shell cat $</flags.txt 2>/dev/null || echo "")
 
 plugins: $(PLUGIN_SOS)
 
