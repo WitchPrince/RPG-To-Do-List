@@ -30,6 +30,8 @@ int userMenuTui(){
 	keypad(user_menu, TRUE);
 
 	char *info = "Use up and down arrow keys to move and return to choose";
+	char *un = "Username: ";
+	char *p = "Password: ";
 		
 	x = X_MEDIUM_SEQ(user_menu, strlen(info));
 	y = Y_MEDIUM(user_menu);
@@ -37,9 +39,9 @@ int userMenuTui(){
 	mvwprintw(stdscr, LINES - 5, x, "%s", info);
 	refresh();
 		
-	print_menu(user_menu, highlight);
+	print_menu(user_menu, highlight, 1);
 
-	choose_keys(user_menu);
+	choice = choose_keys(user_menu);
 
 	if(choice == 1){
 		destroy_win(user_menu); 
@@ -51,15 +53,12 @@ int userMenuTui(){
 		nameList = fopen(USERLIST, "r");
 		
 		if(nameList != NULL){
-			
 			curs_set(1);
 			echo();
-			char *un = "Username: ";
 			mvwprintw(login_menu, H_MEDIUM(login_menu) - 1, X_MEDIUM_SEQ(login_menu, (strlen(un) + MAX_USER_NAME)), un);
 			wrefresh(login_menu);
 			wgetnstr(login_menu, p1.user, MAX_USER_NAME);
 
-			char *p = "Password: ";
 			x = X_MEDIUM_SEQ(login_menu, (strlen(p) + MAX_PASSWD));
 			mvwprintw(login_menu, H_MEDIUM(login_menu) + 1, x, p);
 			wrefresh(login_menu);
@@ -155,7 +154,7 @@ int userMenuTui(){
 		
 			curs_set(1);	
 			echo();	
-			char *un = "Username: ";
+			
 			mvwprintw(sign_up_menu, y - 1, X_MEDIUM_SEQ(sign_up_menu, (strlen(un) + MAX_USER_NAME)), un);
 			wrefresh(sign_up_menu);
 			wgetnstr(sign_up_menu, p1.user, MAX_USER_NAME);
@@ -170,7 +169,6 @@ int userMenuTui(){
 				}
 			}
 
-			char *p = "Password: ";
 			mvwprintw(sign_up_menu, y + 1, X_MEDIUM_SEQ(sign_up_menu, (strlen(p) + MAX_PASSWD)), p);
 			wrefresh(sign_up_menu);
 			wgetnstr(sign_up_menu, p1.passwd, MAX_PASSWD);

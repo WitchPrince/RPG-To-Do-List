@@ -86,10 +86,16 @@ int main(int argc, char *argv[]){
 
 	if(argc == 1){
 		handle = dlopen("database/do-not-change-these/plugins/ui_manager_plugin.so", RTLD_NOW);	
+		if(handle == NULL){
+			fprintf(stderr, "plugin error: %s\n", dlerror());
+		}
 	}
 
 	else if(argc >= 2){
 		handle = dlopen("database/do-not-change-these/plugins/fast_commands_plugin.so", RTLD_NOW);
+		if(handle == NULL){
+			fprintf(stderr, "plugin error: %s\n", dlerror());
+		}
 	}
 
 	if(handle){

@@ -1,7 +1,7 @@
 #include "settingsTui.h"
 
 //Global Variables
-int n_choices, height, width, x, y, c, choice = 0, highlight = 1;
+int n_choices, height, width, x, y, c, choice = 0, highlight = 1, page, max_page, ratio;
 
 char **choices, filePathP[100], filePathI[100], userName[MAX_USER_NAME];
 

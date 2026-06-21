@@ -1,13 +1,10 @@
 #include "../settingsTui.h"
 
 void marketMenuTui(){
-	struct Market m1;
-	struct Item i1;
 	struct Profile p1;
 	strcpy(p1.expBar, "[__________]");
 
-	int decision, check = 1, highlight = 1, choice = 0;
-	unsigned long hash;
+	int highlight = 1, choice = 0;
 
 	while(1){
 		load_menu(market_menu_choices);
@@ -17,9 +14,9 @@ void marketMenuTui(){
 
 		WINDOW *marketMenu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
 
-		print_menu(marketMenu, highlight);
+		print_menu(marketMenu, highlight, 1);
 
-		choose_keys(marketMenu);
+		choice = choose_keys(marketMenu);
 	
 		switch(choice){
 			case 1:

@@ -34,7 +34,7 @@ static int run(int argc, char *argv[]){
 	ui_handle = dlopen(path, RTLD_NOW);
 
 	if(!ui_handle && tui == 1){
-		printf("Hata! Tui modulu etkinlestirilemedi. Modulu ve ncurses'i kontrol edin!\n\n CLI modundan devam ediliyor!\n");
+		printf("Hata! Tui modulu etkinlestirilemedi: %s\n", dlerror());
 		sprintf(path, "database/do-not-change-these/plugins/cli_plugin.so");
 		ui_handle = dlopen(path, RTLD_NOW);
 	}

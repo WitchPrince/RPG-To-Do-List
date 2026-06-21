@@ -1,9 +1,9 @@
 #include "../settingsTui.h"
 
 void buyMenuTui(){
-	bool foundInMarket = 1;
-	int balance, oldBalance, count, highlight = 1;
-	char wanted[MAX_ITEM_NAME];
+	//bool foundInMarket = 1;
+	//int balance, oldBalance, count, highlight = 1;
+	//char wanted[MAX_ITEM_NAME];
 
 	FILE *market = fopen(MARKET, "r");
 	FILE *inventory = fopen(filePathI, "r");
@@ -32,8 +32,8 @@ void buyMenuTui(){
 	load_menu(buy_menu_choices);
 	WINDOW *buyMenu = create_newwin(getmaxy(stdscr) - 4, getmaxx(stdscr) * 2 / 3, 2, 2);
 
-	print_menu(buyMenu, highlight);
-	getch();
+	//print_menu(buyMenu, highlight, 1);
+	//getch();
 
 	for(i = 0; i < n_choices; i++){
 		free(buy_menu_choices[i]);
