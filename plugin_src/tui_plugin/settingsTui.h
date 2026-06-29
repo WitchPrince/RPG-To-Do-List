@@ -11,6 +11,7 @@ extern char **choices, filePathP[100], filePathI[100], userName[MAX_USER_NAME];
 
 //Menu lists
 extern char *user_menu_choices[];
+extern char *login_choices[];
 extern char *menu_list_choices[];
 extern char *market_menu_choices[];
 extern char *buy_menu_choices[100];

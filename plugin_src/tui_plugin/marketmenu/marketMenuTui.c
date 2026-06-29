@@ -10,7 +10,7 @@ void marketMenuTui(){
 		load_menu(market_menu_choices);
 
 		height = get_menu_h(0);
-		width = get_menu_w(20);
+		width = get_menu_w(0);
 
 		WINDOW *marketMenu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
 

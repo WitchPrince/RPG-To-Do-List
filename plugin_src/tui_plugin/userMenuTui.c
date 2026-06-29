@@ -1,7 +1,6 @@
 #include "settingsTui.h"
 
 int userMenuTui(){
-
 	load_menu(user_menu_choices);
 	
 	WINDOW *user_menu;
@@ -21,8 +20,8 @@ int userMenuTui(){
 	cbreak();
 	noecho();
 
-	height = get_menu_h(10);
-	width = get_menu_w(30);
+	height = get_menu_h(0);
+	width = get_menu_w(0);
 	y = Y_MEDIUM(stdscr);
 	x = X_MEDIUM(stdscr);
 
@@ -36,7 +35,7 @@ int userMenuTui(){
 	x = X_MEDIUM_SEQ(user_menu, strlen(info));
 	y = Y_MEDIUM(user_menu);
 
-	mvwprintw(stdscr, LINES - 5, x, "%s", info);
+	mvwprintw(stdscr, LINES, x, "%s", info);
 	refresh();
 		
 	print_menu(user_menu, highlight, 1);
@@ -45,9 +44,10 @@ int userMenuTui(){
 
 	if(choice == 1){
 		destroy_win(user_menu); 
+		load_menu(login_choices);
 		
-		height = get_menu_h(20);
-		width = get_menu_w(60);
+		height = get_menu_h(0);
+		width = get_menu_w(0) + MAX_PASSWD;
 		login_menu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
 
 		nameList = fopen(USERLIST, "r");
@@ -85,6 +85,7 @@ int userMenuTui(){
 						refresh();
 						
 						getch();
+						werase(stdscr);
 						fclose(nameList); fclose(profile);
 						return userNumber;
 					}

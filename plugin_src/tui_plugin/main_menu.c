@@ -18,16 +18,21 @@ void main_menu(){
 
 	char *info = "Use up and down arrow keys to move and return to choose";
 
-	mvwprintw(stdscr, LINES - 5, X_MEDIUM_SEQ(stdscr, strlen(info)), "%s", info);
-	print_menu(main_menu, highlight, 1);
-	refresh();
+	mvwprintw(stdscr, LINES - 1, X_MEDIUM_SEQ(stdscr, strlen(info)), "%s", info);
+
 	
 	while(1){
 		load_menu(menu_list_choices);
+		height = get_menu_h(0);
+		width = get_menu_w(0);
+		
+		main_menu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
+		print_menu(main_menu, highlight, 1);
+		refresh();
+		
 		choice = choose_keys(main_menu);
 		
 		destroy_win(main_menu);
-		
 		switch(choice){
 			case 0: 
 				break;
@@ -70,9 +75,6 @@ void main_menu(){
 		}
 
 		choice = 0;
-		height = get_menu_h(0);
-		width = get_menu_w(0);
-		main_menu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
-		print_menu(main_menu, highlight, 1);
+
 	}
 }

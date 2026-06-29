@@ -60,7 +60,8 @@ void load_menu(char **menu){
 
 void print_menu(WINDOW *menu_win, int highlight, int page_num){
 	box(menu_win, 0, 0);
-	ratio = (height * 2 / 3) - 2;
+	//ratio = (height * 2 / 3) - 2;
+	ratio = height - 4;
 
 	if(ratio <= 0) ratio = 1;
 
@@ -80,7 +81,7 @@ void print_menu(WINDOW *menu_win, int highlight, int page_num){
 	int item_middler = end_index - start_index;
 	y = (getmaxy(menu_win) - item_middler) / 2;
 
-	for(int i = 0; i < n_choices; i++){
+	for(int i = start_index; i < end_index; i++){
 		if(highlight == i + 1){
 			x = X_MEDIUM_SEQ(menu_win, strlen(choices[i]));
 			wattron(menu_win, A_REVERSE);
@@ -92,7 +93,7 @@ void print_menu(WINDOW *menu_win, int highlight, int page_num){
 			x = X_MEDIUM_SEQ(menu_win, strlen(choices[i]));
 			mvwprintw(menu_win, y, x, "%s", choices[i]);
 		}
-		++y;
+		y++;
 	}
 	wrefresh(menu_win);
 }
@@ -128,15 +129,21 @@ unsigned long hashPassword(char *str){
 }
 
 int get_menu_h(int padding){
-	if(padding == 0) height = n_choices + 4;
-	else height = n_choices + padding;
+	height = n_choices + 4;
+	while(getmaxy(stdscr) - 4 < height){
+		height -= 2;
+	}	
 
-	return height;
+	if(padding == 0)
+		return height;
+
+	else 
+		return height + padding;
 }
 
 int get_menu_w(int padding){
 	int biggest = strlen(choices[0]);
-	for(int i = 1; i < n_choices; i++){
+	for(int i = 0; i < n_choices; i++){
 		if(strlen(choices[i]) > biggest) 
 			biggest = strlen(choices[i]);
 	}
@@ -149,12 +156,18 @@ int get_menu_w(int padding){
 int choose_keys(WINDOW *menu){
 	keypad(menu, TRUE);
 	page = 1;
+	choice = 0;
 
 	while(1){
 		c = wgetch(menu);
+		
 		switch(c){
 			case KEY_UP:
-				if(highlight == 1) highlight = n_choices;
+				if(highlight == 1){
+					highlight = n_choices;
+					page = max_page;
+					break;
+				}
 				else --highlight;
 
 				if(highlight <= (page - 1) * ratio) page--;
@@ -163,10 +176,14 @@ int choose_keys(WINDOW *menu){
 				break;
 
 			case KEY_DOWN:
-				if(highlight == n_choices) highlight = 1;
+				if(highlight == n_choices){
+					highlight = 1;
+					page = 1;
+					break;
+				}
 				else ++highlight;
 
-				if(highlight > (page - 1) * ratio) page++;
+				if(highlight > page * ratio) page++;
 				if(page > max_page) page = 1;
 
 				break;
@@ -198,6 +215,7 @@ int choose_keys(WINDOW *menu){
 				highlight = 0;
 				break;
 		}
+		werase(menu);
 		print_menu(menu, highlight, page);
 		if(choice != 0) break;
 	}
