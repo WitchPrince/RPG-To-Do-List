@@ -36,6 +36,7 @@ int get_menu_w(int padding);
 
 int userMenuTui();
 void main_menu();
+int info_panel();
 void taskMenuTui();
 void inventoryMenuTui();
 void marketMenuTui();

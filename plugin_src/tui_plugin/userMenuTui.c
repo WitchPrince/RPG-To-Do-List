@@ -79,13 +79,12 @@ int userMenuTui(){
 					fscanf(profile, "User: %[^,], Password: %lu", userName, &hashInFile);
 
 					if(hash == hashInFile){
-						destroy_win(login_menu);
+						werase(login_menu);
 						char *enter_success = "Login succeed! Welcome!";	
-						mvwprintw(stdscr, Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(enter_success)), enter_success);
+						mvwprintw(login_menu, Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(enter_success)), enter_success);
 						refresh();
 						
-						getch();
-						werase(stdscr);
+						destroy_win(login_menu);
 						fclose(nameList); fclose(profile);
 						return userNumber;
 					}
@@ -142,8 +141,8 @@ int userMenuTui(){
 		if(nameList != NULL){
 			destroy_win(user_menu);
 
-			height = get_menu_h(20);
-			width = get_menu_w(60);
+			height = get_menu_h(0);
+			width = get_menu_w(0) + MAX_PASSWD;
 
 			sign_up_menu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
 

@@ -23,7 +23,7 @@ void inventory(char *filePathI){
 	fscanf(fptr, "Currency: %d\n\n", &balance);
 	printf("\nCurrency: %d\n", balance);
 
-	while(fscanf(fptr, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+	while(fscanf(fptr, "%[^,], %d, Item Details:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 		isExist = 1;
 		printf("%s, %d\nDescription: %s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 	}
@@ -38,13 +38,13 @@ void inventory(char *filePathI){
 		fscanf(fptr, "Currency: %d\n\n", &balance);
 		fprintf(temp, "Currency: %d\n\n", balance);
 
-		while(fscanf(fptr, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+		while(fscanf(fptr, "%[^,], %d, Item Details:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 			if(strcmp(itemSelect, i1.itemName) != 0){
-				fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
+				fprintf(temp, "%s, %d, Item Details:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 			}
 			else{
 				if((i1.itemCount - 1) != 0){
-					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount - 1, i1.itemDetails);
+					fprintf(temp, "%s, %d, Item Details:\n%s\n\n", i1.itemName, i1.itemCount - 1, i1.itemDetails);
 				}
 				check = 1;
 			}

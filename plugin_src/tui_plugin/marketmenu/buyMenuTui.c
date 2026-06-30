@@ -6,7 +6,7 @@ void buyMenuTui(){
 	//char wanted[MAX_ITEM_NAME];
 
 	FILE *market = fopen(MARKET, "r");
-	FILE *inventory = fopen(filePathI, "r");
+	FILE *inventory = fopen(filePathI, "a");
 	FILE *temp = fopen(TEMP, "w");
 
 	struct Market m1;
@@ -14,9 +14,12 @@ void buyMenuTui(){
 	if(market == NULL){
 		char *warning = "Market file isn't exist. Add some product so file can be created.";
 		mvprintw(Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);
+		refresh();
+		getch();
 		return;
 	}
-	
+
+	//This code block is for creating buy_menu_choices list since I couldn't know how long it could be. Tbh it looks inefficient but I didn't want to create a new file for saving each list. It could be change in the future. Please comment if there's another way.
 	int i = 0;
 	while(fscanf(market, "(%d) Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", &m1.id, m1.name, &m1.price, m1.detail) != EOF){
 		buy_menu_choices[i] = malloc(strlen(m1.name) + 1);	
@@ -32,8 +35,8 @@ void buyMenuTui(){
 	load_menu(buy_menu_choices);
 	WINDOW *buyMenu = create_newwin(getmaxy(stdscr) - 4, getmaxx(stdscr) * 2 / 3, 2, 2);
 
-	//print_menu(buyMenu, highlight, 1);
-	//getch();
+	print_menu(buyMenu, highlight, 1);
+	getch();
 
 	for(i = 0; i < n_choices; i++){
 		free(buy_menu_choices[i]);

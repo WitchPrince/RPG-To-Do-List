@@ -17,26 +17,21 @@ void marketMenuTui(){
 		print_menu(marketMenu, highlight, 1);
 
 		choice = choose_keys(marketMenu);
-	
+		destroy_win(marketMenu);
 		switch(choice){
 			case 1:
-				destroy_win(marketMenu);
-				//buyMenuTui();
+				buyMenuTui();
 				break;
 			case 2: 
-				destroy_win(marketMenu);
 				//addProduct();
 				break;
 			case 3: 
-				destroy_win(marketMenu);
 				//removeProduct();
 				break;
 			case 4: 
-				destroy_win(marketMenu);
 				//changePrice();
 				break;
 			case 5:
-				destroy_win(marketMenu);
 				return;
 		}
 		choice = 0;

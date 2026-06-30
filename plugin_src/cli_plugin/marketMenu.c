@@ -81,7 +81,7 @@ void marketMenu(char *filePathP, char *filePathI){
 				}
 			}
 		
-			while(fscanf(inventory, " %[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+			while(fscanf(inventory, " %[^,], %d, Item Details:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 				if(strcmp(wanted, i1.itemName) == 0) check = 0;
 			}
 			rewind(inventory);	
@@ -91,16 +91,16 @@ void marketMenu(char *filePathP, char *filePathI){
 
 			fprintf(temp, "Currency: %d\n\n", balance);
 			if(check){
-				fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", m1.name, count, m1.detail);
+				fprintf(temp, "%s, %d, Item Details:\n%s\n\n", m1.name, count, m1.detail);
 			}
 			
-			while(fscanf(inventory, " %[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+			while(fscanf(inventory, " %[^,], %d, Item Details:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
 				if(strcmp(wanted, i1.itemName) == 0){
-					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount + count, i1.itemDetails);
+					fprintf(temp, "%s, %d, Item Details:\n%s\n\n", i1.itemName, i1.itemCount + count, i1.itemDetails);
 					printf("Urun alindi ve envanterinize eklendi! Kalan bakiyeniz: %d", balance);
 				}
 				else{
-					fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
+					fprintf(temp, "%s, %d, Item Details:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 				}
 			}
 

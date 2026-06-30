@@ -12,7 +12,7 @@
 //=================================================
 //==========
 //Inventory:
-//Currency: %d\n\n%s, %d, Item Detaylari:\n%s\n\n
+//Currency: %d\n\n%s, %d, Item Details:\n%s\n\n
 
 //=======
 //Market:

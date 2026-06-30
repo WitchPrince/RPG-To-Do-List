@@ -32,7 +32,6 @@ char *menu_list_choices[] = {
 				"Tasks",
 				"Inventory",
 				"Cheats",
-				"Profile",
 				"Settings",
 				"Exit",
 				NULL,

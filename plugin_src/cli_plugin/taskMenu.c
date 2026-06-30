@@ -173,8 +173,8 @@ void taskMenu(char *filePathP, char *filePathI){
 
 					balance = oldBalance + reward;						fprintf(temp, "Currency: %d\n\n", balance);
 
-					while(fscanf(inventory, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
-						fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
+					while(fscanf(inventory, "%[^,], %d, Item Details:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+						fprintf(temp, "%s, %d, Item Details:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
 					}
 					fclose(temp); fclose(inventory);
 					remove(filePathI);
@@ -478,8 +478,8 @@ void completeTaskDirectly(char *taskName, char filePathP[100], char filePathI[10
     	balance = oldBalance + reward;
     	fprintf(temp, "Currency: %d\n\n", balance);
     	
-	while(fscanf(inventory, "%[^,], %d, Item Detaylari:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
-        	fprintf(temp, "%s, %d, Item Detaylari:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
+	while(fscanf(inventory, "%[^,], %d, Item Details:\n%[^\n]\n\n", i1.itemName, &i1.itemCount, i1.itemDetails) != EOF){
+        	fprintf(temp, "%s, %d, Item Details:\n%s\n\n", i1.itemName, i1.itemCount, i1.itemDetails);
     	}
     
 	fclose(temp); fclose(inventory);

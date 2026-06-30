@@ -7,11 +7,6 @@ void main_menu(){
 	int highlight = 1, choice = 0;
 	char *good_bye_message = "See you!";
 
-	height = get_menu_h(0);
-	width = get_menu_w(0);
-
-	main_menu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
-
 	noecho();
 	cbreak();
 	curs_set(0);
@@ -20,7 +15,9 @@ void main_menu(){
 
 	mvwprintw(stdscr, LINES - 1, X_MEDIUM_SEQ(stdscr, strlen(info)), "%s", info);
 
-	
+	info_panel();
+
+	//Menu for choosing marketplace, task, etc..
 	while(1){
 		load_menu(menu_list_choices);
 		height = get_menu_h(0);
@@ -58,20 +55,16 @@ void main_menu(){
 				break;
 
 			case 5:
-				profileTui();
+				settingsTui();
 				highlight = 5;
 				break;
 
 			case 6:
-				settingsTui();
-				highlight = 6;
-				break;
-
-			case 7:
 				mvprintw(H_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(good_bye_message)), good_bye_message);
 				getch();
 				endwin();
 				exit(1);
+				break;
 		}
 
 		choice = 0;
