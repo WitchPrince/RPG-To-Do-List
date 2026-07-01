@@ -27,6 +27,12 @@ char *signup_choices[] = {
 				NULL,
 };
 
+char *yes_no_question[] = {
+				"Yes",
+				"No",
+				NULL,
+};
+
 char *menu_list_choices[] = {
 				"Marketplace",
 				"Tasks",
@@ -157,6 +163,7 @@ int choose_keys(WINDOW *menu){
 	page = 1;
 	choice = 0;
 
+	print_menu(menu, highlight, page);
 	while(1){
 		c = wgetch(menu);
 		
@@ -211,11 +218,10 @@ int choose_keys(WINDOW *menu){
 
 			case 10:
 				choice = highlight;
-				highlight = 0;
+				highlight = 1;
 				break;
 		}
 		werase(menu);
-		print_menu(menu, highlight, page);
 		if(choice != 0) break;
 	}
 

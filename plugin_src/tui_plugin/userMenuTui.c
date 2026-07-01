@@ -14,7 +14,8 @@ int userMenuTui(){
 	strcpy(p1.expBar, "[__________]");
 	unsigned long hash, hashInFile;
 	int userNumber = 0, check = 1;
-	int highlight = 1, choice = 0;
+	highlight = 1;
+	choice = 0;
 	
 	curs_set(0);
 	cbreak();

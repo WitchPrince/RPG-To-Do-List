@@ -39,7 +39,11 @@ int info_panel(){
 	}
 
 	mvwprintw(right_inventory, 2, X_MEDIUM_SEQ(right_inventory, strlen(p1.user)), "%s", p1.user);
+	mvwhline(right_inventory, 4, 1, '-', getmaxx(right_inventory) - 2);
 
+	mvwprintw(right_inventory, 6, 1, "Currency: %d", p1.currency);
+
+	mvwprintw(right_inventory, height - 4, 1, "Exp: %d", p1.exp);
 	mvwprintw(right_inventory, height - 3, X_MEDIUM_SEQ(right_inventory,strlen(lvl) + 1),"%s%d", lvl, p1.level);
 	mvwprintw(right_inventory, height - 2, X_MEDIUM_SEQ(right_inventory, strlen(expBar)), "%s", expBar);
 

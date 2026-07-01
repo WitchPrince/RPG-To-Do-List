@@ -12,6 +12,7 @@ extern char **choices, filePathP[100], filePathI[100], userName[MAX_USER_NAME];
 //Menu lists
 extern char *user_menu_choices[];
 extern char *login_choices[];
+extern char *yes_no_question[];
 extern char *menu_list_choices[];
 extern char *market_menu_choices[];
 extern char *buy_menu_choices[100];
@@ -35,6 +36,8 @@ int get_menu_h(int padding);
 int get_menu_w(int padding);
 
 int userMenuTui();
+void autoLoginTui(char user[MAX_USER_NAME]);
+void logOut();
 void main_menu();
 int info_panel();
 void taskMenuTui();

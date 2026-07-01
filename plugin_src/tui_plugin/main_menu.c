@@ -4,7 +4,8 @@ void main_menu(){
 	load_menu(menu_list_choices);
 	WINDOW *main_menu;
 
-	int highlight = 1, choice = 0;
+	highlight = 1;
+	choice = 0;
 	char *good_bye_message = "See you!";
 
 	noecho();

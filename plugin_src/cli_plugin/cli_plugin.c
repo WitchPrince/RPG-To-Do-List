@@ -9,18 +9,17 @@ static int init(){
 }
 
 static int run(int argc, char *argv[]){
-
 	struct Profile p1;
 	memset(&p1, 0, sizeof(struct Profile));
 
-	int decision = 1, number, check = 0; 
+	int decision = 1, number; 
 	char filePathP[100], filePathI[100], tempUser[MAX_USER_NAME];
 
 	FILE *log = fopen(AUTO, "r");
-	FILE *nameList = fopen(USERLIST, "r");
+	FILE *nameList;
 
-	if(log != NULL){	
-		fscanf(log, "%d\n", &check);
+	if(log != NULL){
+		nameList = fopen(USERLIST, "r");	
 		fscanf(log, "%s", p1.user);
  		fclose(log);
 		
@@ -33,9 +32,10 @@ static int run(int argc, char *argv[]){
 				}
 			}
 		}
+		else fclose(nameList);
 	}
 
-	if(log == NULL || check == 0){    
+	else{    
 		number = userMenu();
 		if(number == 0){
 			printf("Sifre yanlis!");
@@ -43,11 +43,12 @@ static int run(int argc, char *argv[]){
 		}
 		
 		nameList = fopen(USERLIST, "r");
-		while(fscanf(nameList, "(%d) User: %s", &p1.number, p1.user) != EOF){
-			if(number == p1.number) break;
+		if(nameList != NULL){
+			while(fscanf(nameList, "(%d) User: %s", &p1.number, p1.user) != EOF){
+				if(number == p1.number) break;
+			}
+			fclose(nameList);
 		}
-		fclose(nameList);
-	
 		autoLogin(p1.user);
 	}
 
