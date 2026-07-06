@@ -97,8 +97,9 @@ int userMenu(){
 		sprintf(filePath, USER_DIR, userName);
 
 		if(nameList != NULL){
-			while(fscanf(nameList, "(%d) User: %s\n", &userNumber, user) != EOF){
-			}
+			rewind(nameList);
+			while(fscanf(nameList, "(%d) User: %s\n", &userNumber, user) != EOF);
+
 			rewind(nameList);
 			fprintf(nameList, "(%d) User: %s\n", userNumber + 1, userName);
 		

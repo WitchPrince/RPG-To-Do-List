@@ -36,7 +36,7 @@ int userMenuTui(){
 	x = X_MEDIUM_SEQ(user_menu, strlen(info));
 	y = Y_MEDIUM(user_menu);
 
-	mvwprintw(stdscr, LINES, x, "%s", info);
+	mvwprintw(stdscr, LINES - 2, x, "%s", info);
 	refresh();
 		
 	print_menu(user_menu, highlight, 1);
@@ -80,11 +80,6 @@ int userMenuTui(){
 					fscanf(profile, "User: %[^,], Password: %lu", userName, &hashInFile);
 
 					if(hash == hashInFile){
-						werase(login_menu);
-						char *enter_success = "Login succeed! Welcome!";	
-						mvwprintw(login_menu, Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(enter_success)), enter_success);
-						refresh();
-						
 						destroy_win(login_menu);
 						fclose(nameList); fclose(profile);
 						return userNumber;
@@ -160,6 +155,7 @@ int userMenuTui(){
 			wrefresh(sign_up_menu);
 			wgetnstr(sign_up_menu, p1.user, MAX_USER_NAME);
 
+			rewind(nameList);
 			while(fscanf(nameList, "(%d) User: %s\n", &userNumber, userName) != EOF){
 				if(strcmp(userName, p1.user) == 0){
 					destroy_win(sign_up_menu);
@@ -181,6 +177,7 @@ int userMenuTui(){
 			hash = hashPassword(p1.passwd);
 			sprintf(filePathP, USER_DIR, p1.user);
 		
+			rewind(nameList);
 			char tempName[MAX_USER_NAME];	
 			while(fscanf(nameList, "(%d) User: %s\n", &userNumber, tempName) != EOF);
 				
@@ -189,6 +186,8 @@ int userMenuTui(){
 
 			profile = fopen(filePathP, "w");
 			fprintf(profile, "User: %s, Password: %lu\n\nCurrency: 0\nExp: 0\nLevel: 0, Exp Bar ==> %s\n", p1.user, hash, p1.expBar);
+
+			strcpy(userName, p1.user);
 
 			fclose(profile); fclose(nameList);
 			return userNumber + 1;

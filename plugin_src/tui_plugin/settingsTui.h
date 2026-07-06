@@ -46,7 +46,7 @@ void marketMenuTui();
 void buyMenuTui();
 void profileTui();
 void cheatMenuTui(char userName[MAX_USER_NAME]);
-void settingsTui();
+void settingsMenuTui();
 
 unsigned long hashPassword(char *str);
 

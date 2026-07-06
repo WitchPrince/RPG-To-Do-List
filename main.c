@@ -81,6 +81,7 @@ int main(int argc, char *argv[]){
 
 			else printf("Hata! Girdiginiz eklenti zaten aktif degil!");
 			fclose(modFile); fclose(temp);
+			return 0;
 		}
 	}
 

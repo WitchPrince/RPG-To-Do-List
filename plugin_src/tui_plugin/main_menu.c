@@ -16,17 +16,16 @@ void main_menu(){
 
 	mvwprintw(stdscr, LINES - 1, X_MEDIUM_SEQ(stdscr, strlen(info)), "%s", info);
 
-	info_panel();
 
 	//Menu for choosing marketplace, task, etc..
 	while(1){
+		info_panel();
 		load_menu(menu_list_choices);
 		height = get_menu_h(0);
 		width = get_menu_w(0);
 		
 		main_menu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
 		print_menu(main_menu, highlight, 1);
-		refresh();
 		
 		choice = choose_keys(main_menu);
 		
@@ -56,7 +55,7 @@ void main_menu(){
 				break;
 
 			case 5:
-				settingsTui();
+				settingsMenuTui();
 				highlight = 5;
 				break;
 

@@ -7,6 +7,7 @@ CORE_SRCS = main.c
 PLUGIN_SRC_DIR = plugin_src
 PLUGIN_OUT_DIR = database/do-not-change-these/plugins
 USER_DIR	=	database/users
+AUTO_LOGIN	=	database/do-not-change-these/auto-login.txt
 
 PLUGIN_DIRS = $(wildcard $(PLUGIN_SRC_DIR)/*)
 PLUGIN_SOS = $(patsubst $(PLUGIN_SRC_DIR)/%, $(PLUGIN_OUT_DIR)/%.so, $(PLUGIN_DIRS))
@@ -77,4 +78,5 @@ clean:
 	@$(RM_CMD)
 	@rm -f $(PLUGIN_OUT_DIR)/*.so
 	@rm	-rf	$(USER_DIR)
+	@rm	-rf	$(AUTO_LOGIN)
 	@echo Temizlik tamamlandi.

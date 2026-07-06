@@ -24,7 +24,7 @@ static int run(int argc, char *argv[]){
  		fclose(log);
 		
 		if(nameList != NULL){	
-			while(fscanf(nameList, "(%d) User: %s", &p1.number, tempUser) != EOF){
+			while(fscanf(nameList, " (%d) User: %s", &p1.number, tempUser) != EOF){
 				if(strcmp(p1.user, tempUser) == 0){
 					number = p1.number;
 					fclose(nameList);
@@ -44,7 +44,7 @@ static int run(int argc, char *argv[]){
 		
 		nameList = fopen(USERLIST, "r");
 		if(nameList != NULL){
-			while(fscanf(nameList, "(%d) User: %s", &p1.number, p1.user) != EOF){
+			while(fscanf(nameList, " (%d) User: %s", &p1.number, p1.user) != EOF){
 				if(number == p1.number) break;
 			}
 			fclose(nameList);

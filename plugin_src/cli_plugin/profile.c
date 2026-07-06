@@ -10,10 +10,10 @@ void profileMenu(char *filePathP){
 	
 	char i;
 	while(1){
-				i = fgetc(profile);
-				if(i == EOF) break;
-				else printf("%c", i);
-			}
+		i = fgetc(profile);
+		if(i == EOF) break;
+		else printf("%c", i);
+	}
 	fclose(profile);	
 	printf("\n\nMenuye donmek icin Enter tusuna basın.");	
 	getchar();

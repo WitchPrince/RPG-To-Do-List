@@ -10,6 +10,9 @@ void changeTaskParamDirectly(char *taskName, int paramType, char *newValueStr);
 void autoLogin(char user[MAX_USER_NAME]);
 void logOut();
 
+void list_all_plugins();
+void list_active_plugins();
+
 int userMenu();
 
 unsigned long hashPassword(char *str);

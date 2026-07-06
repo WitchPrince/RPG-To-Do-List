@@ -1,9 +1,12 @@
 #include "settingsTui.h"
 
+//Profile at right
 int info_panel(){
-	//Profile at right
 	struct Profile p1;
+	memset(&p1, 0, sizeof(struct Profile));
 	FILE *profile = fopen(filePathP, "r");
+	if(profile == NULL) return 0;
+
 	unsigned long hash;
 	char *lvl = "Level: ";
 	char expBar[23];

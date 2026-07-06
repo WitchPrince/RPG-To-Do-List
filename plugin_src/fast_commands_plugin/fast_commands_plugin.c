@@ -129,6 +129,29 @@ static int run(int argc, char *argv[]){
 		printf("Cikis yapildi!");
 	}
 
+	else if(strcmp(argv[1], "--list-active-plugins") == 0 || strcmp(argv[1], "-lap") == 0){
+		FILE *modFile = fopen(ACTIVE_PLUGINS, "r");
+		char i;
+		while(1){
+			i = fgetc(modFile);
+			if(i == EOF) break;
+			else printf("%c", i);
+		}
+		fclose(modFile);
+		return 0;
+	}
+
+	else if(strcmp(argv[1], "--list-all-plugins") == 0 || strcmp(argv[1], "-lp") == 0){
+		FILE *modFile = fopen(AVAILABLE_PLUGINS, "r");
+		char i;
+		while(1){
+			i = fgetc(modFile);
+			if(i == EOF) break;
+			else printf("%c", i);	
+		}
+		fclose(modFile);
+		return 0;
+	}
 	return 0;
 }
 
