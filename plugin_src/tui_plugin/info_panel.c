@@ -5,7 +5,7 @@ int info_panel(){
 	struct Profile p1;
 	memset(&p1, 0, sizeof(struct Profile));
 	FILE *profile = fopen(filePathP, "r");
-	if(profile == NULL) return 0;
+	if(profile == NULL) return -1;
 
 	unsigned long hash;
 	char *lvl = "Level: ";
@@ -21,7 +21,7 @@ int info_panel(){
 
 	if(width > 24){
 		int i = 1;
-		while(i < 11){
+		while(i < strlen(p1.expBar) - 1){
 			if(p1.expBar[i] == '_') break;
 			if(p1.expBar[i] == '=') i++;
 		}
@@ -44,10 +44,10 @@ int info_panel(){
 	mvwprintw(right_inventory, 2, X_MEDIUM_SEQ(right_inventory, strlen(p1.user)), "%s", p1.user);
 	mvwhline(right_inventory, 4, 1, '-', getmaxx(right_inventory) - 2);
 
-	mvwprintw(right_inventory, 6, 1, "Currency: %d", p1.currency);
+	mvwprintw(right_inventory, 6, 2, "Currency: %d", p1.currency);
 
-	mvwprintw(right_inventory, height - 4, 1, "Exp: %d", p1.exp);
-	mvwprintw(right_inventory, height - 3, X_MEDIUM_SEQ(right_inventory,strlen(lvl) + 1),"%s%d", lvl, p1.level);
+	mvwprintw(right_inventory, height - 5, 2, "Exp: %d", p1.exp);
+	mvwprintw(right_inventory, height - 3, X_MEDIUM_SEQ(right_inventory, strlen(lvl) + 1),"%s%d", lvl, p1.level);
 	mvwprintw(right_inventory, height - 2, X_MEDIUM_SEQ(right_inventory, strlen(expBar)), "%s", expBar);
 
 	wrefresh(right_inventory);

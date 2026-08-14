@@ -16,6 +16,7 @@ extern char *yes_no_question[];
 extern char *menu_list_choices[];
 extern char *market_menu_choices[];
 extern char *buy_menu_choices[100];
+extern char *settings_menu_choices[];
 
 //Macros
 #define X_MEDIUM_SEQ(win, lenght) (getmaxx(win) - lenght) / 2

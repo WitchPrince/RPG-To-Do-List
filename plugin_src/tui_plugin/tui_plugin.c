@@ -21,12 +21,13 @@ static int run(int argc, char *argv[]){
 	struct Profile p1;
 	memset(&p1, 0, sizeof(struct Profile));
 
+	FILE *nameList;
 	FILE *log = fopen(AUTO, "r");
-	FILE *nameList = fopen(USERLIST, "r");
 	if(log != NULL){
 		fscanf(log, "%s", p1.user);
 		fclose(log);
 
+		nameList = fopen(USERLIST, "r");
 		if(nameList != NULL){
 			while(fscanf(nameList, " (%d) User: %s", &p1.number, tempUser) != EOF){
 				if(strcmp(p1.user, tempUser) == 0){
