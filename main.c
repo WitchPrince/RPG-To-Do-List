@@ -7,7 +7,7 @@ int main(int argc, char *argv[]){
 	if(argc >= 2){
 		if(strcmp(argv[1], "--enable-plugin") == 0 || strcmp(argv[1], "-ep") == 0){
 		if(argc < 3){
-			printf("\nHata! Aktif edilecek eklentinin ismini girmediniz!\nKullanim: rpg -ep <plugin_file.so>\n");
+			printf("\nError! Plugin name is blank!\nUsage: rpg -ep <plugin_file.so>\n");
 			return 0;
 		}
 
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
 		if(modFile != NULL){
 			while(fscanf(modFile, "%s\n", pluginName) != EOF){
 				if(strcmp(pluginName, argv[2]) == 0){
-					printf("Hata! Bu eklenti zaten aktif!");
+					printf("This plugin is already active!");
 					fclose(modFile);
 					return 0;
 				}
@@ -25,18 +25,20 @@ int main(int argc, char *argv[]){
 		}
 
 		else{
-			printf("Aktif pluginler dosyasi bulunamadi!");
-			return 0;
+			printf("Active plugin file is empty! New file will be created...\n");
+			modFile = fopen(ACTIVE_PLUGINS, "w");
+			fclose(modFile);
+			printf("New plugin file has been created!");
 		}
 		modFile = fopen(AVAILABLE_PLUGINS, "r");
 
 		if(modFile != NULL){
 			while(fscanf(modFile, "database/do-not-change-these/plugins/%s\n", pluginName) != EOF){ 
 				if(strcmp(pluginName, argv[2]) == 0){
-					printf("\nEklenti bulundu! Aktif ediliyor...\n\n");
+					printf("\nPlugin found! Activating now...\n\n");
 					FILE *addPlugin = fopen(ACTIVE_PLUGINS, "a");
 					fprintf(addPlugin, "%s\n", pluginName);
-					printf("\n%s eklentisi aktif edilmistir! Uygulamayi kapatip actiginizda uygulanacak!", pluginName);
+					printf("\n%s plugin has been activated! Please restart the app.", pluginName);
 					fclose(addPlugin); fclose(modFile);
 					return 0;
 					}
@@ -61,7 +63,7 @@ int main(int argc, char *argv[]){
 			}
 
 			else{
-				printf("Aktif pluginler dosyası bulunamadi!");
+				printf("Active plugins file is empty!");
 				return 0;
 			}
 
@@ -71,7 +73,7 @@ int main(int argc, char *argv[]){
 					if(strcmp(pluginName, argv[2]) != 0){
 						fprintf(temp, "%s\n", pluginName);
 					}
-					else printf("%s eklentisi deaktive edildi!", pluginName);
+					else printf("%s plugin has been deactivated!", pluginName);
 				}
 				fclose(modFile); fclose(temp);
 				remove(ACTIVE_PLUGINS);
@@ -79,7 +81,7 @@ int main(int argc, char *argv[]){
 				return 0;
 			}
 
-			else printf("Hata! Girdiginiz eklenti zaten aktif degil!");
+			else printf("Plugin isn't active!");
 			fclose(modFile); fclose(temp);
 			return 0;
 		}
@@ -110,7 +112,7 @@ int main(int argc, char *argv[]){
 		dlclose(handle);
 	}
 	else{
-		printf("Motor hatasi! Eklenti yuklenemedi: %s\n\n", dlerror());
+		printf("Engine error! Plugin couldn't load: %s\n\n", dlerror());
 	}
 
 	return 0;

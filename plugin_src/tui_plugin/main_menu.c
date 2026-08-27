@@ -1,5 +1,7 @@
 #include "settingsTui.h"
 
+int info_panel_check;
+
 void main_menu(){
 	load_menu(menu_list_choices);
 	WINDOW *main_menu;
@@ -16,7 +18,7 @@ void main_menu(){
 
 	mvwprintw(stdscr, LINES - 1, X_MEDIUM_SEQ(stdscr, strlen(info)), "%s", info);
 
-	int info_panel_check = 0;
+	info_panel_check = 0;
 	//Menu for choosing marketplace, task, etc..
 	while(1){
 		if(info_panel()){
@@ -76,7 +78,6 @@ void main_menu(){
 				getch();
 				endwin();
 				exit(1);
-				break;
 		}
 		choice = 0;
 	}

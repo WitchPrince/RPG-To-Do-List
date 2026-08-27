@@ -3,7 +3,7 @@
 void taskMenuTui(){}
 void inventoryMenuTui(){}
 void profileTui(){}
-void cheatMenuTui(char userName[MAX_USER_NAME]){}
+void cheatMenuTui(){}
 
 //Menu lists
 char *user_menu_choices[] = {
@@ -154,7 +154,7 @@ int get_menu_h(int padding){
 }
 
 int get_menu_w(int padding){
-	int biggest = strlen(choices[0]);
+	size_t biggest = strlen(choices[0]);
 	for(int i = 1; i < n_choices; i++){
 		if(strlen(choices[i]) > biggest) 
 			biggest = strlen(choices[i]);

@@ -1,5 +1,3 @@
-#include "../../plugin.h"
-#include "../../settings.h"
 #include "settingsCli.h"
 
 static void *cli_handle = NULL;
@@ -8,7 +6,7 @@ static int init(){
 	return 0;
 }
 
-static int run(int argc, char *argv[]){
+static int run(){
 	struct Profile p1;
 	memset(&p1, 0, sizeof(struct Profile));
 

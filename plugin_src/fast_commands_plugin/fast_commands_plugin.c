@@ -1,5 +1,3 @@
-#include "../../plugin.h"
-#include "../../settings.h"
 #include "settingsFCP.h"
 
 static void *fast_com_handle = NULL;

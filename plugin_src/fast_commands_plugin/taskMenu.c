@@ -1,4 +1,3 @@
-#include "../../settings.h"
 #include "settingsFCP.h"
 
 void taskMenu(char filePathP[100], char filePathI[100]){
@@ -45,7 +44,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 					fptr = fopen(TASKS, "r");
 
 					if(fptr != NULL){
-						while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", name, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+						while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", name, &k1.difficulty, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
 							if(strcmp(name, k1.taskName) == 0){
 								isDuplicate = 1;
 								printf("Bu isimde baska bir gorev mevcut. Lutfen baska bir isim giriniz!");
@@ -60,13 +59,13 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				fptr = fopen(TASKS, "a");	
 
 				printf("Gorev zorlugu (1-5): ");
-				scanf("%d", &k1.hardness);
+				scanf("%d", &k1.difficulty);
 				printf("Odul ve exp otomatik hesaplansin mi? (1/0): ");
 				scanf("%d", &oto);
 
 				if(oto == 1){
-					k1.reward = k1.hardness * 50;
-					k1.exp = k1.hardness * 5;
+					k1.reward = k1.difficulty * 50;
+					k1.exp = k1.difficulty * 5;
 				}
 				else{
 					printf("Gorev odulu: ");
@@ -82,11 +81,11 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 					printf("Gorev detayi (Max 300 harf!):\n");
 					scanf(" %[^\n]", k1.taskDetails);
 
-					fprintf(fptr, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+					fprintf(fptr, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
 				}
 				else{
 					 char filler[30] = ("Gorev detayi eklenmemis!");
-				fprintf(fptr, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, filler);
+				fprintf(fptr, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, filler);
 				}
 
 
@@ -111,12 +110,12 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				printf("\nTamamlamak istediginiz gorevin ismini yaziniz: ");
 				scanf(" %[^\n]", searchTask);
 
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.difficulty, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
 					if(strcmp(searchTask, k1.taskName) != 0){
-						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails); 
+						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails); 
 					}
 					else{
-						fprintf(finished, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+						fprintf(finished, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
 						reward = k1.reward;
 						expGain = k1.exp;
 						check = 1;
@@ -216,9 +215,9 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				printf("Hangi görevin parametrelerini degistirmek istiyorsunuz?");
 				scanf(" %[^\n]", searchName);
 
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.difficulty, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
 					if(strcmp(searchName, k1.taskName) != 0)
-						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
 					else{
 						printf("Hangi parametreyi degistirmek istiyorsunuz:\n(1) Task Name\n(2) Hardness\n(3) Reward\n(4) Exp\n(5) Details\nDecision: ");
 						scanf("%d", &subDecision);
@@ -226,28 +225,28 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 							if(subDecision == 1){
 								printf("Yeni gorev adini giriniz: ");
 								scanf(" %[^\n]", searchName);
-								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", searchName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", searchName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
 								printf("Gorev adi degistirildi!");
 							}
 
 							else if(subDecision == 2){
 								printf("Yeni zorluk duzeyini giriniz (1-5): ");
-								scanf("%d", &k1.hardness);
-								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+								scanf("%d", &k1.difficulty);
+								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
 								printf("Gorev zorluk seviyesi degistirildi!");
 							}
 
 							else if(subDecision == 3){
 								printf("Yeni odul miktarini giriniz: ");
 								scanf("%d", &k1.reward);
-								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
 								printf("Gorev odul miktari degistirildi!");
 							}
 
 							else if(subDecision == 4){
 								printf("Yeni exp miktarini giriniz: ");
 								scanf("%d", &k1.exp);
-								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
 								printf("Gorev exp miktari degistirildi!");
 							}
 
@@ -256,7 +255,7 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 								while(getchar() != '\n');
 
 								scanf(" %[^\n]", k1.taskDetails);
-								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+								fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
 							}
 
 							check = 1;
@@ -293,9 +292,9 @@ void taskMenu(char filePathP[100], char filePathI[100]){
 				printf("Silmek istediginiz gorevin adi: ");
 				scanf(" %[^\n]", deleteQuest);
 
-				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+				while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.difficulty, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
 					if(strcmp(deleteQuest, k1.taskName) != 0){
-						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+						fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
 					}
 					else check = 1;
 				}
@@ -341,12 +340,12 @@ void showFinishedTasks(){
 	}
 }
 
-void addTaskDirectly(char *taskName, int hardness, int autoCalc, int reward, int exp, char *details) {
+void addTaskDirectly(char *taskName, int difficulty, int autoCalc, int reward, int exp, char *details) {
 	FILE *fptr = fopen(TASKS, "a");
 
 	if(autoCalc == 1) {
-        	reward = hardness * 50;
-        	exp = hardness * 5;
+        	reward = difficulty * 50;
+        	exp = difficulty * 5;
    	}
 
     	else{
@@ -360,7 +359,7 @@ void addTaskDirectly(char *taskName, int hardness, int autoCalc, int reward, int
         	strcpy(details, "Gorev detayi eklenmemis!");
     	}
 
-	fprintf(fptr, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", taskName, hardness, reward, exp, details);
+	fprintf(fptr, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", taskName, difficulty, reward, exp, details);
 
 	fclose(fptr);
 	printf("Gorev basariyla eklendi!\n");
@@ -377,9 +376,9 @@ void deleteTaskDirectly(char *taskName) {
         	return;
     	}
 
-    	while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+    	while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.difficulty, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
         	if(strcmp(taskName, k1.taskName) != 0){
-            		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+            		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
         	}
 		
 		else {
@@ -406,20 +405,20 @@ void changeTaskParamDirectly(char *taskName, int paramType, char *newValueStr) {
         	return;
     	}
 
-    	while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+    	while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.difficulty, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
         	if(strcmp(taskName, k1.taskName) != 0){
-            		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+            		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
         	}
 		
 		else {
             		check = 1;
             		if(paramType == 1) strcpy(k1.taskName, newValueStr);
-            		else if(paramType == 2) k1.hardness = atoi(newValueStr);
+            		else if(paramType == 2) k1.difficulty = atoi(newValueStr);
             		else if(paramType == 3) k1.reward = atoi(newValueStr);
             		else if(paramType == 4) k1.exp = atoi(newValueStr);
             		else if(paramType == 5) strcpy(k1.taskDetails, newValueStr);
 
-            		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+            		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
             		printf("Parametre basariyla degistirildi!\n");
         	}
     	}	
@@ -444,13 +443,13 @@ void completeTaskDirectly(char *taskName, char filePathP[100], char filePathI[10
         	return;
     	}
 
-    	while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.hardness, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
+    	while(fscanf(fptr, "Gorev: %[^,], Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n %[^\n]\n\n", k1.taskName, &k1.difficulty, &k1.reward, &k1.exp, k1.taskDetails) != EOF){
         	if(strcmp(taskName, k1.taskName) != 0){
-        		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+        		fprintf(temp, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
         	}
 	
 		else {
-        		fprintf(finished, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.hardness, k1.reward, k1.exp, k1.taskDetails);
+        		fprintf(finished, "Gorev: %s, Zorluk: %d, Odul: %d, Exp: %d\nGorev Detaylari:\n%s\n\n", k1.taskName, k1.difficulty, k1.reward, k1.exp, k1.taskDetails);
         		reward = k1.reward; expGain = k1.exp; check = 1;
         	}
     	}

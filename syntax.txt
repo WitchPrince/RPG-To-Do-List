@@ -1,0 +1,23 @@
+//=================================================
+//some syntax templates for remembering file syntax
+//=================================================
+//==========
+//Inventory:
+//Currency: %d\n\n%s, %d, Item Details:\n%s\n\n
+
+//=======
+//Market:
+//(%d) Product: %s, Price: %d\nItem Details:%s\n\n
+
+//==========
+//Task Menu:
+//Task: %s, Difficulty: %d, Reward: %d, Exp: %d\nTask Details:\n%s\n\n
+
+//=========
+//Namelist:
+//(%d) User: %s\n
+
+//========
+//Profile:
+//User: %s, Password: %lu\n\nCurrency: %d\nExp: %d\nLevel: %d, Exp Bar ==> %s\n
+

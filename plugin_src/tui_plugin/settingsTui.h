@@ -1,12 +1,12 @@
 #ifndef SETTINGSTUI_H
 #define SETTINGSTUI_H
 
-#include "../../settings.h"
-#include "../../plugin.h"
+#include "settings.h"
+#include "plugin.h"
 #include <ncurses.h>
 
 //Variables
-extern int n_choices, height, width, x, y, c, choice, highlight, page, max_page, ratio;
+extern int n_choices, height, width, x, y, c, choice, highlight, page, max_page, ratio, info_panel_check;
 extern char **choices, filePathP[100], filePathI[100], userName[MAX_USER_NAME];
 
 //Menu lists
@@ -46,7 +46,7 @@ void inventoryMenuTui();
 void marketMenuTui();
 void buyMenuTui();
 void profileTui();
-void cheatMenuTui(char userName[MAX_USER_NAME]);
+void cheatMenuTui();
 void settingsMenuTui();
 
 unsigned long hashPassword(char *str);

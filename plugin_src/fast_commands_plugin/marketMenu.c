@@ -1,4 +1,3 @@
-#include "../../settings.h"
 #include "settingsFCP.h"
 
 void marketMenu(char filePathP[100], char filePathI[100]){

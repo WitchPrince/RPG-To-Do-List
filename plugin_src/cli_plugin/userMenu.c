@@ -1,4 +1,3 @@
-#include "../../settings.h"
 #include "settingsCli.h"
 
 unsigned long hashPassword(char *str) {

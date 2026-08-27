@@ -11,7 +11,7 @@ static int init(){
 	return 0;
 }
 
-static int run(int argc, char *argv[]){
+static int run(){
 	initscr();
 	int number;
 	char tempUser[MAX_USER_NAME];

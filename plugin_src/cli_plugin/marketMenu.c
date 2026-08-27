@@ -1,4 +1,3 @@
-#include "../../settings.h"
 #include "settingsCli.h"
 
 void marketMenu(char *filePathP, char *filePathI){

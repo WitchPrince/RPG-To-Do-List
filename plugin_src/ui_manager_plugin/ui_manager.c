@@ -1,5 +1,5 @@
-#include "../../plugin.h"
-#include "../../settings.h"
+#include "plugin.h"
+#include "settings.h"
 
 static void *ui_handle = NULL;
 

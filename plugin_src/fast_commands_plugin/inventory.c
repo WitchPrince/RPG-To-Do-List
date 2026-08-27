@@ -1,4 +1,3 @@
-#include "../../settings.h"
 #include "settingsFCP.h"
 
 void inventory(char filePathI[100]){

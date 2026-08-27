@@ -1,6 +1,9 @@
 #ifndef SETTINGSFCP_H
 #define SETTINGSFCP_H
 
+#include "plugin.h"
+#include "settings.h"
+
 //fast functions
 void showFinishedTasks();
 void addTaskDirectly(char *taskName, int hardness, int autoCalc, int reward, int exp, char *details);

@@ -1,0 +1,2 @@
+ui_manager_plugin.so
+tui_plugin.so

@@ -1,0 +1,4 @@
+database/do-not-change-these/plugins/cli_plugin.so
+database/do-not-change-these/plugins/fast_commands_plugin.so
+database/do-not-change-these/plugins/tui_plugin.so
+database/do-not-change-these/plugins/ui_manager_plugin.so

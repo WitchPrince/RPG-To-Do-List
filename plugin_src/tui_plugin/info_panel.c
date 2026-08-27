@@ -21,7 +21,7 @@ int info_panel(){
 
 	if(width > 24){
 		int i = 1;
-		while(i < strlen(p1.expBar) - 1){
+		while(i < (int)strlen(p1.expBar) - 1){
 			if(p1.expBar[i] == '_') break;
 			if(p1.expBar[i] == '=') i++;
 		}
