@@ -28,5 +28,12 @@ struct Profile{
 	int currency, exp, level, number;
 };
 
+struct node{
+	struct node *next;
+	struct node *prev;
+	char name[MAX_ITEM_NAME];
+	char details[MAX_ITEM_DETAILS];
+	int count;
+};
 
 #endif

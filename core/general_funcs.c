@@ -22,7 +22,7 @@ int isExist(const char *i_name, const char *i_path){
 	return 0;
 }
 
-int add_to_inventory(const char *i_name, const char *i_path, const unsigned int i_count){
+int buy_from_market(const char *i_name, const char *i_path, const unsigned int i_count){
 	//Error Codes
 	//0: File error. Some file or files doesn't exist.
 	//1: Success
@@ -164,4 +164,20 @@ int add_to_task_list(const char *t_name, const int t_difficulty, const int t_rew
 
 	fclose(tasks);
 	return 1;
+}
+
+struct node *addNode(struct node *head){
+	struct node *newNode = malloc(sizeof(struct node));
+	struct node *current = head;
+	newNode->next = NULL;
+
+	if(head == NULL){
+		newNode->prev = NULL;
+		return newNode;
+	}
+
+	while(current->next != NULL) current = current->next;
+
+	newNode->prev = current;
+	return newNode;
 }

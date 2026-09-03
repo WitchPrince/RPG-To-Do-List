@@ -15,7 +15,6 @@ extern char *login_choices[];
 extern char *yes_no_question[];
 extern char *menu_list_choices[];
 extern char *market_menu_choices[];
-extern char *buy_menu_choices[100];
 extern char *settings_menu_choices[];
 
 //Macros
@@ -29,6 +28,9 @@ extern char *settings_menu_choices[];
 //Function headers
 void print_menu(WINDOW *menu_win, int highlight, int page);
 void load_menu(char **menu);
+void load_menu_ll(struct node *head);
+void clear_ll(struct node *head);
+void clear_choices_ll();
 void destroy_win(WINDOW *local_win);
 WINDOW *create_newwin(int height, int width, int starty, int startx);
 int choose_keys(WINDOW *menu);

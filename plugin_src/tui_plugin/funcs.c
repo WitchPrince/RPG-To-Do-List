@@ -5,62 +5,6 @@ void inventoryMenuTui(){}
 void profileTui(){}
 void cheatMenuTui(){}
 
-//Menu lists
-char *user_menu_choices[] = {
-				"Login",
-				"Sign Up",
-				NULL,
-};
-
-/*I didn't wanna create windows with fixed sizes.
- * So I'll recalculate the padding with this list*/
-char *login_choices[] = {
-				"Username: ",
-				"Password: ",
-				NULL,
-};
-
-char *signup_choices[] = {
-				"Username: ",
-				"Password: ",
-				NULL,
-};
-
-char *yes_no_question[] = {
-				"Yes",
-				"No",
-				NULL,
-};
-
-char *settings_menu_choices[] = {
-				"Disable auto-login",
-				"Change username",
-				"Change password",
-				"Exit",
-				NULL,
-};
-
-char *menu_list_choices[] = {
-				"Marketplace",
-				"Tasks",
-				"Inventory",
-				"Cheats",
-				"Settings",
-				"Exit",
-				NULL,
-};
-
-char *market_menu_choices[] = {
-				"Buy",
-				"Add Product",
-				"Remove Product",
-				"Change Price",
-				"Exit",
-				NULL,
-};
-
-char *buy_menu_choices[100];
-
 //Some functions that I didn't wanted to add to the main file
 void load_menu(char **menu){
 	choices = menu;
@@ -68,6 +12,46 @@ void load_menu(char **menu){
 
 	while(choices[n_choices] != NULL) 
 		n_choices++;
+}
+
+void load_menu_ll(struct node *head){
+	struct node *current = head;
+	int node_lenght = 0;
+	while(current != NULL){
+		node_lenght++;
+		current = current->next;
+	}
+	choices = malloc((node_lenght + 2) * sizeof(*choices));
+
+	current = head;
+	int i = 0;
+	while(current != NULL){
+		choices[i] = malloc(sizeof(char) * MAX_ITEM_NAME);
+		strcpy(choices[i], current->name);
+		current = current->next;
+		i++;
+	}
+	choices[i] = malloc(sizeof(char) * 5);
+	strcpy(choices[i], "Exit");
+	choices[i + 1] = NULL;
+	n_choices = i + 1;
+}
+
+void clear_choices_ll(){
+	for(int i = 0; choices[i] != NULL; i++){
+		free(choices[i]);
+	}
+	free(choices);
+}
+
+void clear_ll(struct node *head){	
+	struct node *current = head;
+	struct node *deleted = current;
+	while(current != NULL){
+		current = current->next;
+		free(deleted);
+		deleted = current;
+	}
 }
 
 void print_menu(WINDOW *menu_win, int highlight, int page_num){

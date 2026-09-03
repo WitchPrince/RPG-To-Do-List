@@ -13,7 +13,7 @@
 
 int isExist(const char *i_name, const char *i_path);
 
-int add_to_inventory(
+int buy_from_market(
 	const char *i_name, 
 	const char *i_path, 
 	const unsigned int i_count
@@ -32,5 +32,7 @@ int add_to_task_list(
 	const int t_exp, 
 	const char *t_details
 );
+
+struct node *addNode(struct node *head);
 
 #endif
