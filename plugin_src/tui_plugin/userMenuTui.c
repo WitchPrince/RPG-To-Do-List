@@ -56,12 +56,14 @@ int userMenuTui(){
 		if(nameList != NULL){
 			curs_set(1);
 			echo();
+			mvwhline(login_menu, 1, 1, '=', getmaxx(login_menu) - 2);
+			mvwhline(login_menu, getmaxy(login_menu) - 2, 1, '=', getmaxx(login_menu) - 2);
 			mvwprintw(login_menu, H_MEDIUM(login_menu) - 1, X_MEDIUM_SEQ(login_menu, (strlen(un) + MAX_USER_NAME)), un);
 			wrefresh(login_menu);
 			wgetnstr(login_menu, p1.user, MAX_USER_NAME);
 
 			x = X_MEDIUM_SEQ(login_menu, (strlen(p) + MAX_PASSWD));
-			mvwprintw(login_menu, H_MEDIUM(login_menu) + 1, x, p);
+			mvwprintw(login_menu, H_MEDIUM(login_menu), x, p);
 			wrefresh(login_menu);
 			wgetnstr(login_menu, p1.passwd, MAX_PASSWD);
 
@@ -137,7 +139,7 @@ int userMenuTui(){
 		if(nameList != NULL){
 			destroy_win(user_menu);
 
-			height = get_menu_h(0);
+			height = get_menu_h(0) + 1;
 			width = get_menu_w(0) + MAX_PASSWD;
 
 			sign_up_menu = create_newwin(height, width, Y_MEDIUM(stdscr), X_MEDIUM(stdscr));
@@ -147,11 +149,12 @@ int userMenuTui(){
 			 * please let me know if there's another way. This macro is also so tiring tbh */
 			char *welcome = "Welcome to RPG To-Do List app!";
 			mvwprintw(sign_up_menu, 1, X_MEDIUM_SEQ(sign_up_menu, strlen(welcome)), welcome);
+			mvwhline(sign_up_menu, 2, 1, '_', width - 2);
 		
 			curs_set(1);	
 			echo();	
 			
-			mvwprintw(sign_up_menu, y - 1, X_MEDIUM_SEQ(sign_up_menu, (strlen(un) + MAX_USER_NAME)), un);
+			mvwprintw(sign_up_menu, y, X_MEDIUM_SEQ(sign_up_menu, (strlen(un) + MAX_USER_NAME)), un);
 			wrefresh(sign_up_menu);
 			wgetnstr(sign_up_menu, p1.user, MAX_USER_NAME);
 
@@ -166,7 +169,7 @@ int userMenuTui(){
 				}
 			}
 
-			mvwprintw(sign_up_menu, y + 1, X_MEDIUM_SEQ(sign_up_menu, (strlen(p) + MAX_PASSWD)), p);
+			mvwprintw(sign_up_menu, y + 2, X_MEDIUM_SEQ(sign_up_menu, (strlen(p) + MAX_PASSWD)), p);
 			wrefresh(sign_up_menu);
 			wgetnstr(sign_up_menu, p1.passwd, MAX_PASSWD);
 			destroy_win(sign_up_menu);

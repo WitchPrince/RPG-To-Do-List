@@ -1,48 +1,44 @@
 #include "../settingsTui.h"
 
-void buyMenuTui(){
-	//bool foundInMarket = 1;
-	//int balance, oldBalance, count, highlight = 1;
-	//char wanted[MAX_ITEM_NAME];
+static int check_files();
 
+void buyMenuTui(){
+	struct Market m1;
+	struct Profile p1;
+	struct node *head = NULL;
+	struct node *current;
+
+	if(check_files() == -1){
+		return;
+	}
+	
 	FILE *profile = fopen(filePathP, "r");
 	FILE *market = fopen(MARKET, "r");
 
-	struct Market m1;
-	struct Profile p1;
+	unsigned long __temp1;
+	fscanf(profile, "User: %[^,], Password: %lu\n\nCurrency: %d\n", p1.user, &__temp1, &p1.currency);
+	fclose(profile);
 
-	if(market == NULL){
-		char *warning = "Market file isn't exist. Add some product so file can be created.";
-		mvprintw(Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);
-		refresh();
-		getch();
-		return;
-	}
-
-	if(profile != NULL){
-		char *__temp = malloc(sizeof(char) * MAX_USER_NAME);
-		unsigned long __temp2;
-		fscanf(profile, "User: %[^,], Password: %lu\n\nCurrency: %d\n", __temp, &__temp2, &p1.currency);
-		free(__temp);
-		fclose(profile);
-	}
-
-	//This code block is for creating buy_menu_choices list since I couldn't know how long it could be. Tbh it looks inefficient but I didn't want to create a new file for saving each list. It could be change in the future. Please comment if there's another way.
-	int i = 0;
 	while(fscanf(market, "(%d) Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", &m1.id, m1.name, &m1.price, m1.detail) != EOF){
-		buy_menu_choices[i] = malloc(strlen(m1.name) + 1);	
-		strcpy(buy_menu_choices[i], m1.name);
-		i++;
+		if(head == NULL){
+			head = addNode(NULL);
+			current = head;
+			strcpy(current->name, m1.name);
+			strcpy(current->details, m1.detail);
+			continue;
+		}
+		current->next = addNode(head);
+		current = current->next;
+		strcpy(current->name, m1.name);
+		strcpy(current->details, m1.detail);
 	}
-	buy_menu_choices[i] = NULL;
 
-	//these 3 lines are temporary, only for development stage. This is also a reminder to myself lol
 	rewind(market);
 
 	char *wanted_product;
 	int wanted_count;
 	while(1){
-		load_menu(buy_menu_choices);
+		load_menu_ll(head);
 		WINDOW *buyMenu;
 	
 		if(info_panel_check) {
@@ -59,8 +55,14 @@ void buyMenuTui(){
 		print_menu(buyMenu, highlight, 1);
 
 		choice = choose_keys(buyMenu);
-		wanted_product = buy_menu_choices[choice - 1];
-		while(fscanf(market, "(%d) Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", &m1.id, m1.name, &m1.price, m1.detail) != EOF || strcmp(m1.name, wanted_product));	
+		wanted_product = choices[choice - 1];
+
+		if(!strcmp(wanted_product, "Exit")){
+			destroy_win(buyMenu);
+			break;
+		}
+
+		while(fscanf(market, "(%d) Product: %[^,], Price: %d\nItem Details:%[^\n]\n\n", &m1.id, m1.name, &m1.price, m1.detail) != EOF && strcmp(m1.name, wanted_product));	
 		wclear(buyMenu);
 
 		char *question = malloc(sizeof(char) * 256);
@@ -68,13 +70,14 @@ void buyMenuTui(){
 		mvwprintw(buyMenu, Y_MEDIUM(buyMenu), X_MEDIUM_SEQ(buyMenu, strlen(question)), question);
 		free(question);
 
-		mvwscanw(buyMenu, Y_MEDIUM(buyMenu) + 2, X_MEDIUM(buyMenu), "%d", &wanted_count);
+		//mvwscanw(buyMenu, Y_MEDIUM(buyMenu) + 2, X_MEDIUM(buyMenu), "%d", &wanted_count);
+		wscanw(buyMenu, "%d", &wanted_count);
 		wclear(buyMenu);
 		if(p1.currency >= wanted_count * m1.price){
 			p1.currency = p1.currency - wanted_count * m1.price;
 			wclear(buyMenu);
 
-			int control = add_to_inventory(m1.name, filePathI, wanted_count);
+			int control = buy_from_market(m1.name, filePathI, wanted_count);
 			if(control == 1){
 				char *SUCCESS = "Purchase completed!";
 				mvwprintw(buyMenu, Y_MEDIUM(buyMenu), X_MEDIUM_SEQ(buyMenu, strlen(SUCCESS)), SUCCESS);
@@ -84,12 +87,34 @@ void buyMenuTui(){
 				mvwprintw(buyMenu, Y_MEDIUM(buyMenu), X_MEDIUM_SEQ(buyMenu, strlen(ERROR)), ERROR);
 			}
 		}
+		clear_choices_ll();
 		destroy_win(buyMenu);
 	}
-
+	clear_choices_ll();
+	clear_ll(head);
 	getch();
+}
 
-	for(i = 0; i < n_choices; i++){
-		free(buy_menu_choices[i]);
+static int check_files(){
+	FILE *market = fopen(MARKET, "r");
+	if(market == NULL){
+		char *warning = "Market file isn't exist. Add some product so file can be created.";
+		mvprintw(Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);
+		refresh();
+		getch();
+		return -1;
 	}
+	fclose(market);
+
+	FILE *profile = fopen(filePathP, "r");
+	if(profile == NULL){
+		char *warning = "Profile file isn't exist. Probably some file corruption has occured. Please create a new profile!";
+		mvprintw(Y_MEDIUM(stdscr), X_MEDIUM_SEQ(stdscr, strlen(warning)), warning);
+		refresh();
+		getch();
+		return -1;
+	}
+	fclose(profile);
+
+	return 1;
 }
